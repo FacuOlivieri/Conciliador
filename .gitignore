@@ -1,0 +1,18 @@
+### IDE (configuración personal) ###
+.idea/
+*.iml
+
+### Herramientas locales del agente ###
+.atl/
+.codegraph/
+
+### Basura de imports de IntelliJ con variables de Maven sin resolver ###
+${project.build.directory}/
+
+### Datos reales: nunca al repo (constitución, regla 5). Los tests generan sus archivos por código ###
+*.csv
+*.xlsx
+*.xls
+
+### Configuración sensible ###
+.env
