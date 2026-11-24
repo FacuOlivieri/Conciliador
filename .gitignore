@@ -3,6 +3,7 @@
 *.iml
 
 ### Herramientas locales del agente ###
+.claude/
 .atl/
 .codegraph/
 
