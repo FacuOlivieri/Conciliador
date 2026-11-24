@@ -3,6 +3,8 @@ package com.proyecto.Coinciliador.model;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Map;
+
+import com.proyecto.Coinciliador.enums.MensajeCarga;
 import org.junit.jupiter.api.Test;
 
 // Cubre el catálogo de mensajes de la spec 001 (RF-4 a RF-10, RF-20, RF-23, RNF-4).

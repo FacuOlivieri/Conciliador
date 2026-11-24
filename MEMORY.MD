@@ -34,5 +34,5 @@ Memoria del proyecto de Conciliador entre sesiones. Maximo de ~50 lineas: resume
 ## Proximos Pasos
 
 - Plan 001 aprobado. `tasks.md` con 22 tareas en 3 bloques (A núcleo puro T1–T7, B lectores T8–T12, C carga/web/UI T13–T22); se agrupó en bloques en lugar de partir la spec (autorizado por el usuario).
-- `tasks.md` aprobado. **T1 hecha** (modelo + excepción, 5 tests en verde). Próximo: T2 `ExtensionHelper`.
+- `tasks.md` aprobado. **T1 y T2 hechas** (30 tests en verde). Próximo: T3 `ContenidoHelper` y `VistaPreviaHelper`. Enums movidos por el usuario a `enums/` (ver plan/README desactualizados).
 - T12 es un punto de control: si el `.xlsx` de 100.000 filas falla por memoria o tiempo, revisar D8 antes de seguir.

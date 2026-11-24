@@ -2,6 +2,7 @@ package com.proyecto.Coinciliador.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.proyecto.Coinciliador.enums.Lugar;
 import org.junit.jupiter.api.Test;
 
 // Cubre RF-1: dos lugares de carga, Propio y Contraparte.

@@ -1,4 +1,4 @@
-package com.proyecto.Coinciliador.model;
+package com.proyecto.Coinciliador.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

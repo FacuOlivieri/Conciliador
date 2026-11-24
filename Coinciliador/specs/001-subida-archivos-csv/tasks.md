@@ -25,7 +25,7 @@ Si preferís partir la spec (por ejemplo, 001 CSV + interfaz y 002 Excel), se pu
   - Crea `Lugar`, `FormatoArchivo`, `MensajeCarga` (M1–M8), `ArchivoCargado`, `Resumen`, `EstadoLugar` (sellada: `Vacio`, `Rechazado`, `PendienteDeHoja`, `Valido`) y `ArchivoRechazadoException`.
   - Hecho cuando: `MensajeCargaTest` comprueba que hay exactamente 8 mensajes y que cada texto es idéntico al catálogo de la spec; `LugarTest` comprueba las etiquetas "Propio" y "Contraparte".
 
-[ ] **T2. `ExtensionHelper`.** RF-3, RF-4
+[x] **T2. `ExtensionHelper`.** RF-3, RF-4
   - Hecho cuando: `ExtensionHelperTest` pasa con `.CSV`/`.XLSX`/`.XLS` aceptados, `datos.csv.xlsx` → `xlsx`, sin extensión y nombre terminado en punto → vacío, `.ods`/`.xlsm`/`.xlsb`/`.tsv` no permitidos.
 
 [ ] **T3. `ContenidoHelper` y `VistaPreviaHelper`.** Definiciones (celda/fila con datos), RF-18

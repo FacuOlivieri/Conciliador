@@ -1,9 +1,8 @@
-package com.proyecto.Coinciliador.model;
+package com.proyecto.Coinciliador.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-/** Los dos lugares de carga de una conciliación (RF-1). */
 @Getter
 @RequiredArgsConstructor
 public enum Lugar {

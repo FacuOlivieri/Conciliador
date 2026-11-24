@@ -1,5 +1,7 @@
 package com.proyecto.Coinciliador.model;
 
+import com.proyecto.Coinciliador.enums.FormatoArchivo;
+
 import java.nio.charset.Charset;
 import java.util.List;
 
