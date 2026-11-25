@@ -31,7 +31,7 @@ Si preferís partir la spec (por ejemplo, 001 CSV + interfaz y 002 Excel), se pu
 [x] **T3. `ContenidoHelper` y `VistaPreviaHelper`.** Definiciones (celda/fila con datos), RF-18
   - Hecho cuando: `ContenidoHelperTest` pasa con celda de solo espacios → sin datos y fila con una celda con datos → con datos; `VistaPreviaHelperTest` pasa con 15 filas → 10, 25 columnas → 20 y celda de 60 caracteres → 50 caracteres terminados en "…", y con celdas cortas sin cambios.
 
-[ ] **T4. `AcumuladorFilas` y `HuellaHelper`.** RF-6, RF-7, RF-20
+[x] **T4. `AcumuladorFilas` y `HuellaHelper`.** RF-6, RF-7, RF-20
   - Hecho cuando: `AcumuladorFilasTest` pasa con filas vacías ignoradas, solo las primeras 10 guardadas, 100.000 filas aceptadas y la fila 100.001 → `ArchivoRechazadoException` con M4; `HuellaHelperTest` comprueba el SHA-256 conocido de un texto fijo y que dos arreglos iguales dan la misma huella.
 
 [ ] **T5. `CodificacionHelper`.** RF-8, RF-12
