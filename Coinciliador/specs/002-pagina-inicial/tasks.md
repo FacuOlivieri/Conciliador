@@ -50,7 +50,7 @@ Dependencias: T13 (`Carga` con `tipo` y `reiniciar`), T14 y T18 (`CargaControlle
   - Crea `IConciliacionService` y `ConciliacionService` con `elegir`, `descartarYAbrir` y `tipoActivo`, usando el repositorio real en memoria.
   - Hecho cuando: `ConciliacionServiceTest` pasa con: elegir sin carga en curso fija el tipo y devuelve abrir; otro tipo con un archivo válido cargado devuelve pedir confirmación y deja la carga y el tipo intactos; el mismo tipo con carga en curso la deja intacta; `descartarYAbrir` deja ambos lugares vacíos, sin confirmación y con el tipo nuevo.
 
-[ ] **T7. `InicioController`: elegir, confirmar y descartar.** RF-4, RF-6, RF-7, RF-8, RF-9, RF-11, RNF-1
+[x] **T7. `InicioController`: elegir, confirmar y descartar.** RF-4, RF-6, RF-7, RF-8, RF-9, RF-11, RNF-1
   - Agrega `POST /conciliacion/{slug}`, `GET /conciliacion/{slug}/confirmar` y `POST /conciliacion/{slug}/descartar`, la plantilla `confirmar-cambio.html` y el mensaje P1 por redirección con atributo *flash*.
   - Hecho cuando: `InicioControllerEleccionTest` (MockMvc) pasa con: `POST /conciliacion/iva` sin carga → redirige a `/carga`; slug inexistente → redirige a `/`, muestra P1 y no toca la carga; con un archivo válido cargado, otro tipo → redirige a la confirmación, que muestra D1 y un enlace "Cancelar" con `href="/"`; `POST …/descartar` → redirige a `/carga` con ambos lugares vacíos; abrir la confirmación sin que haga falta → redirige a `/carga` o a `/` y no muestra D1; las páginas nuevas no tienen recursos externos.
 

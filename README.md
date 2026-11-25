@@ -57,12 +57,13 @@ Paquete base `com.proyecto.Coinciliador`.
 - `EleccionTipoHelper`: decide al elegir un tipo: pide confirmación solo si hay carga en curso de otro tipo; si no, abre la carga.
 
 **`controller/` y recursos (spec 002, página inicial)**
-- `InicioController`: `GET /`, la primera pantalla de la aplicación; muestra las tarjetas de los tipos de conciliación.
+- `InicioController`: `GET /` (las tarjetas de los tipos y, si corresponde, el mensaje P1), `POST /conciliacion/{slug}` (elegir), `GET /conciliacion/{slug}/confirmar` (aviso D1) y `POST /conciliacion/{slug}/descartar`; un tipo inexistente vuelve a `/` con P1 sin tocar la carga.
 - `templates/inicio.html`: la página inicial; cada tipo es un formulario `POST` con un botón, sin JavaScript.
+- `templates/confirmar-cambio.html`: pide confirmar el cambio de tipo; "Cancelar" es un enlace a `/` y "Descartar y continuar" un botón aparte.
 - `static/css/inicio.css`: estilos mínimos y locales (sin CDN); el diseño final llega en la tarea T9.
 
 **`service/` (spec 002, página inicial)**
-- `IConciliacionService` y `ConciliacionService`: elegir el tipo (abre la carga o pide confirmar si habría que descartar archivos), descartar y abrir una carga vacía del tipo nuevo, y consultar el tipo activo.
+- `IConciliacionService` y `ConciliacionService`: elegir el tipo (abre la carga o pide confirmar si habría que descartar archivos), decidir qué pasaría sin cambiar nada (para las páginas que se piden con GET), descartar y abrir una carga vacía del tipo nuevo, y consultar el tipo activo.
 
 **`dto/`, `mapper/` y `utils/validacion/` (spec 002, página inicial)**
 - `TipoVistaDto`: una tarjeta de la página inicial (slug, nombre y frase de ayuda de un tipo).

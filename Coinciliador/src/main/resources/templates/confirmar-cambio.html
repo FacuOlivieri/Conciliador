@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Conciliador</title>
+    <link rel="stylesheet" th:href="@{/css/inicio.css}">
+</head>
+<body>
+<main>
+    <h1>Pasar de <span th:text="${confirmacion.nombreTipoActivo}">IVA</span>
+        a <span th:text="${confirmacion.nombreTipoElegido}">Compras</span></h1>
+
+    <p role="alert" th:text="${confirmacion.texto}">Aviso de descarte</p>
+
+    <!--/* Cancelar va primero: el primer elemento enfocable no descarta nada. */-->
+    <a href="/" th:href="@{/}">Cancelar</a>
+
+    <form method="post" th:action="@{/conciliacion/{slug}/descartar(slug=${confirmacion.slugTipoElegido})}">
+        <button type="submit">Descartar y continuar</button>
+    </form>
+</main>
+</body>
+</html>

@@ -7,6 +7,9 @@ import java.util.Optional;
 /** Casos de uso de la página inicial: elegir el tipo de conciliación, descartar la carga y consultar el tipo activo. */
 public interface IConciliacionService {
 
+    /** Dice qué pasaría al elegir ese tipo, sin cambiar nada: sirve para las páginas que se piden con GET. */
+    ResultadoEleccion decidir(TipoConciliacion tipo);
+
     /** Decide qué pasa al elegir el tipo; solo cambia la carga si se puede abrir sin perder nada. */
     ResultadoEleccion elegir(TipoConciliacion tipo);
 

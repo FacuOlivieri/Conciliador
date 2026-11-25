@@ -12,6 +12,7 @@ import com.proyecto.Coinciliador.enums.MensajeInicio;
 import com.proyecto.Coinciliador.enums.TipoConciliacion;
 import com.proyecto.Coinciliador.mapper.InicioMapper;
 import com.proyecto.Coinciliador.service.ICargaService;
+import com.proyecto.Coinciliador.service.IConciliacionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -30,6 +31,9 @@ class InicioControllerPaginaTest {
     // El manejador global de excepciones de la spec 001 también entra en este slice y necesita el servicio.
     @MockitoBean
     private ICargaService cargaService;
+
+    @MockitoBean
+    private IConciliacionService conciliacionService;
 
     @Test
     void laRaizMuestraLaPaginaInicial() throws Exception {

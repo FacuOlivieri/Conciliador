@@ -83,6 +83,25 @@ class ConciliacionServiceTest {
     }
 
     @Test
+    void decidirNoCambiaLaCargaNiElTipoActivo() {
+        servicio.elegir(TipoConciliacion.IVA);
+        repositorio.guardar(Lugar.PROPIO, valido());
+        Carga antes = repositorio.obtener();
+
+        assertThat(servicio.decidir(TipoConciliacion.COMPRAS)).isEqualTo(ResultadoEleccion.PEDIR_CONFIRMACION);
+        assertThat(servicio.decidir(TipoConciliacion.IVA)).isEqualTo(ResultadoEleccion.ABRIR_CARGA);
+        assertThat(repositorio.obtener()).isEqualTo(antes);
+    }
+
+    @Test
+    void decidirSinCargaEnCursoNoReiniciaElTipo() {
+        servicio.elegir(TipoConciliacion.IVA);
+
+        assertThat(servicio.decidir(TipoConciliacion.VENTAS)).isEqualTo(ResultadoEleccion.ABRIR_CARGA);
+        assertThat(servicio.tipoActivo()).contains(TipoConciliacion.IVA);
+    }
+
+    @Test
     void sinNingunaEleccionNoHayTipoActivo() {
         assertThat(servicio.tipoActivo()).isEmpty();
     }

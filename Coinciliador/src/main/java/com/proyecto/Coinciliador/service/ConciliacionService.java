@@ -18,11 +18,15 @@ public class ConciliacionService implements IConciliacionService {
     private final ICargaRepository repositorio;
 
     @Override
+    public ResultadoEleccion decidir(TipoConciliacion tipo) {
+        return EleccionTipoHelper.decidir(
+                repositorio.tipoActivo().orElse(null), hayCargaEnCurso(repositorio.obtener()), tipo);
+    }
+
+    @Override
     public ResultadoEleccion elegir(TipoConciliacion tipo) {
-        Optional<TipoConciliacion> activo = repositorio.tipoActivo();
-        ResultadoEleccion resultado = EleccionTipoHelper.decidir(
-                activo.orElse(null), hayCargaEnCurso(repositorio.obtener()), tipo);
-        if (resultado == ResultadoEleccion.ABRIR_CARGA && !activo.equals(Optional.of(tipo))) {
+        ResultadoEleccion resultado = decidir(tipo);
+        if (resultado == ResultadoEleccion.ABRIR_CARGA && !repositorio.tipoActivo().equals(Optional.of(tipo))) {
             repositorio.reiniciar(tipo);
         }
         return resultado;
