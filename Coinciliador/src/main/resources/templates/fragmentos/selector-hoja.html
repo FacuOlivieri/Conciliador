@@ -2,7 +2,7 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <body>
 <!--/* Elige o cambia la hoja de un Excel. Sin hoja usada no hay ninguna opción preseleccionada (RF-15). */-->
-<form th:fragment="selector(lugar, codigo)" method="post"
+<form th:fragment="selector(lugar, codigo)" class="selector-hoja" method="post"
       th:action="@{/carga/{codigo}/hoja(codigo=${codigo})}">
     <fieldset>
         <legend>Hojas de <span th:text="${lugar.etiqueta}">lugar</span></legend>

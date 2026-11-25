@@ -58,7 +58,7 @@ Dependencias: T13 (`Carga` con `tipo` y `reiniciar`), T14 y T18 (`CargaControlle
   - Solo pruebas sobre lo que aplicó la sesión de la 001. Si algo falla, no se corrige acá: se avisa a esa sesión.
   - Hecho cuando: `CargaControllerTipoTest` (MockMvc) pasa con: `GET /carga` con tipo activo muestra el nombre del tipo como título y un enlace `href="/"`; `GET /carga` sin tipo activo → redirige a `/` sin mensaje; subir un archivo, volver al inicio y elegir el mismo tipo → la carga conserva el archivo.
 
-[ ] **T9. Diseño visual con `/impeccable`.** RF-3 (presentación), RNF-1, RNF-2
+[x] **T9. Diseño visual con `/impeccable`.** RF-3 (presentación), RNF-1, RNF-2
   - Tarea visual: se verifica en el navegador, no con test (constitución, regla 4). Empieza con `/impeccable init`; conviene coordinarlo con la sesión de la 001 para que su T21 use el mismo contexto de diseño.
   - Hecho cuando: en el navegador se ven las cuatro tarjetas y la pantalla de confirmación con el aviso D1, el mensaje P1 y el título del tipo en la carga; se recorre todo el flujo con Tab y Enter sin usar el ratón; la página funciona con la red desactivada, sin CDN ni fuentes externas; los tests de T5, T7 y T8 siguen en verde.
 

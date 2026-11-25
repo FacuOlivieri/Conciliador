@@ -4,10 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Conciliador</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
     <link rel="stylesheet" th:href="@{/css/inicio.css}">
 </head>
 <body>
-<main>
+<header class="barra">
+    <span class="marca">Conciliador</span>
+</header>
+<main class="inicio">
     <h1>¿Qué querés conciliar?</h1>
 
     <p th:if="${inicio.mensaje != null}" role="alert" th:text="${inicio.mensaje}"></p>

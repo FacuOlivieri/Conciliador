@@ -4,24 +4,31 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title th:text="|${pantalla.tituloTipo} - Carga de archivos|">Carga de archivos</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/carga.css}">
 </head>
 <body>
-<header>
-    <a href="/">Volver al inicio</a>
+<header class="barra">
+    <a class="volver" href="/">Volver al inicio</a>
 </header>
-<main>
+<main class="carga">
     <h1 th:text="${pantalla.tituloTipo}">Tipo de conciliación</h1>
-    <section th:replace="~{fragmentos/tarjeta-lugar :: tarjeta(${pantalla.propio}, 'PROPIO')}"></section>
-    <section th:replace="~{fragmentos/tarjeta-lugar :: tarjeta(${pantalla.contraparte}, 'CONTRAPARTE')}"></section>
+    <div class="lugares">
+        <section th:replace="~{fragmentos/tarjeta-lugar :: tarjeta(${pantalla.propio}, 'PROPIO')}"></section>
+        <section th:replace="~{fragmentos/tarjeta-lugar :: tarjeta(${pantalla.contraparte}, 'CONTRAPARTE')}"></section>
+    </div>
 
-    <p th:if="${pantalla.advertenciaMismoArchivo}" th:text="${pantalla.textoAdvertencia}" role="status">Advertencia</p>
-    <!--/* El botón se deshabilita porque lo pide RF-22; el servidor vuelve a controlarlo al confirmar. */-->
-    <form method="post" th:action="@{/carga/confirmar}">
-        <button type="submit" id="confirmar" th:disabled="${!pantalla.confirmarHabilitado}"
-                th:aria-describedby="${pantalla.confirmarHabilitado} ? null : 'falta'">Confirmar</button>
-    </form>
-    <p th:unless="${pantalla.confirmarHabilitado}" id="falta" th:text="${pantalla.textoFalta}">Qué falta</p>
-    <p th:if="${pantalla.confirmada}" th:text="${pantalla.mensajeFinal}" role="status">Listo</p>
+    <div class="confirmar">
+        <p th:if="${pantalla.advertenciaMismoArchivo}" th:text="${pantalla.textoAdvertencia}" role="status">Advertencia</p>
+        <!--/* El botón se deshabilita porque lo pide RF-22; el servidor vuelve a controlarlo al confirmar. */-->
+        <form method="post" th:action="@{/carga/confirmar}">
+            <button type="submit" id="confirmar" th:disabled="${!pantalla.confirmarHabilitado}"
+                    th:aria-describedby="${pantalla.confirmarHabilitado} ? null : 'falta'">Confirmar</button>
+        </form>
+        <p class="falta" th:unless="${pantalla.confirmarHabilitado}" id="falta" th:text="${pantalla.textoFalta}">Qué falta</p>
+        <p th:if="${pantalla.confirmada}" th:text="${pantalla.mensajeFinal}" role="status">Listo</p>
+    </div>
 </main>
 </body>
 </html>

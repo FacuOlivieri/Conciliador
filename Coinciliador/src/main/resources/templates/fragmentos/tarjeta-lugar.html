@@ -2,42 +2,45 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <body>
 <!--/* Tarjeta de un lugar de carga. "codigo" es PROPIO o CONTRAPARTE: forma los id y la URL del formulario. */-->
-<section th:fragment="tarjeta(lugar, codigo)" th:with="rechazado=${lugar.estado.name() == 'RECHAZADO'}"
+<section th:fragment="tarjeta(lugar, codigo)" class="lugar" th:with="rechazado=${lugar.estado.name() == 'RECHAZADO'}"
          th:id="|lugar-${codigo}|" th:aria-labelledby="|titulo-${codigo}|">
     <h2 th:id="|titulo-${codigo}|" th:text="${lugar.etiqueta}">Lugar</h2>
 
-    <div th:switch="${lugar.estado.name()}">
-        <p th:case="'VACIO'">Todavía no cargaste un archivo.</p>
+    <div class="estado" th:switch="${lugar.estado.name()}">
+        <p class="vacio" th:case="'VACIO'">Todavía no cargaste un archivo.</p>
         <p th:case="'RECHAZADO'" th:id="|error-${codigo}|" role="alert">
             <!--/* Un archivo de más de 30 MB se corta antes de leerlo: no hay nombre que mostrar. */-->
             <strong th:unless="${#strings.isEmpty(lugar.nombreArchivo)}" th:text="${lugar.nombreArchivo}">archivo</strong>
             <span th:text="${lugar.mensajeRechazo}">Motivo del rechazo</span>
         </p>
-        <div th:case="'PENDIENTE_DE_HOJA'">
-            <p><strong th:text="${lugar.nombreArchivo}">archivo</strong>: falta elegir la hoja.</p>
+        <th:block th:case="'PENDIENTE_DE_HOJA'">
+            <p class="archivo"><strong th:text="${lugar.nombreArchivo}">archivo</strong>: falta elegir la hoja.</p>
             <form th:replace="~{fragmentos/selector-hoja :: selector(${lugar}, ${codigo})}"></form>
-        </div>
-        <div th:case="'VALIDO'">
-            <p>Archivo cargado: <strong th:text="${lugar.nombreArchivo}">archivo</strong></p>
-            <p th:if="${lugar.hojaUsada != null}">Hoja: <span th:text="${lugar.hojaUsada}">Hoja</span></p>
-            <p th:text="${lugar.cantidadFilas == 1} ? '1 fila con datos' : |${lugar.cantidadFilas} filas con datos|">
+        </th:block>
+        <th:block th:case="'VALIDO'">
+            <p class="archivo">Archivo cargado: <strong th:text="${lugar.nombreArchivo}">archivo</strong></p>
+            <p class="dato" th:if="${lugar.hojaUsada != null}">Hoja: <span th:text="${lugar.hojaUsada}">Hoja</span></p>
+            <p class="dato" th:text="${lugar.cantidadFilas == 1} ? '1 fila con datos' : |${lugar.cantidadFilas} filas con datos|">
                 0 filas con datos
             </p>
-            <table>
-                <caption>Vista previa de <span th:text="${lugar.etiqueta}">lugar</span></caption>
-                <tbody>
-                <tr th:each="fila : ${lugar.vistaPrevia}">
-                    <td th:each="celda : ${fila}" th:text="${celda}">celda</td>
-                </tr>
-                </tbody>
-            </table>
+            <!--/* La región se puede enfocar para desplazar la tabla con el teclado (tabla ancha, sin scroll de la página). */-->
+            <div class="tabla-previa" role="region" tabindex="0" th:aria-labelledby="|vista-${codigo}|">
+                <table>
+                    <caption th:id="|vista-${codigo}|">Vista previa de <span th:text="${lugar.etiqueta}">lugar</span></caption>
+                    <tbody>
+                    <tr th:each="fila : ${lugar.vistaPrevia}">
+                        <td th:each="celda : ${fila}" th:text="${celda}">celda</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
             <th:block th:if="${lugar.mostrarSelectorHoja}">
                 <form th:replace="~{fragmentos/selector-hoja :: selector(${lugar}, ${codigo})}"></form>
             </th:block>
-        </div>
+        </th:block>
     </div>
 
-    <form method="post" th:action="@{/carga/{codigo}(codigo=${codigo})}" enctype="multipart/form-data"
+    <form class="subida" method="post" th:action="@{/carga/{codigo}(codigo=${codigo})}" enctype="multipart/form-data"
           th:aria-labelledby="|titulo-${codigo}|">
         <label th:for="|archivo-${codigo}|">
             Archivo de <span th:text="${lugar.etiqueta}">lugar</span> (.csv, .xlsx o .xls, hasta 10 MB)

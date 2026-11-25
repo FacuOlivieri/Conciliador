@@ -1,0 +1,212 @@
+/* Pantalla de carga (spec 001): título del tipo, las dos tarjetas de lugar y Confirmar. Tokens de base.css. */
+.carga h1 {
+    margin-block-end: 2rem;
+}
+
+/* Una tarjeta por lugar: lado a lado en pantallas anchas y apiladas en las angostas. */
+.lugares {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr));
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.lugar {
+    display: grid;
+    gap: 1.25rem;
+    min-inline-size: 0;
+    padding: 1.5rem;
+    border: 1px solid var(--linea);
+    border-radius: var(--radio-tarjeta);
+    background: var(--superficie);
+    box-shadow: var(--sombra);
+}
+
+.estado {
+    display: grid;
+    gap: 0.75rem;
+    min-inline-size: 0;
+}
+
+/* Estado vacío: una caja tranquila que dice qué falta. */
+.vacio {
+    padding: 1.25rem 1rem;
+    border: 1px dashed var(--linea);
+    border-radius: var(--radio-control);
+    background: var(--superficie-2);
+    color: var(--texto-suave);
+}
+
+.archivo {
+    overflow-wrap: anywhere;
+}
+
+.dato {
+    color: var(--texto-suave);
+}
+
+.dato span {
+    color: var(--texto);
+    font-weight: 600;
+}
+
+/* Vista previa: la región se desplaza sola para que la página no tenga scroll horizontal. */
+.tabla-previa {
+    max-inline-size: 100%;
+    overflow: auto;
+    border: 1px solid var(--linea);
+    border-radius: var(--radio-control);
+    scrollbar-color: var(--acento) var(--superficie-2);
+}
+
+.tabla-previa table {
+    inline-size: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.tabla-previa caption {
+    padding: 0.5rem 0.75rem;
+    background: var(--superficie-2);
+    border-block-end: 1px solid var(--linea);
+    color: var(--texto-suave);
+    text-align: start;
+    font-weight: 600;
+}
+
+.tabla-previa td {
+    padding: 0.5rem 0.75rem;
+    border-block-end: 1px solid var(--linea);
+    white-space: nowrap;
+}
+
+.tabla-previa tr:last-child td {
+    border-block-end: 0;
+}
+
+.tabla-previa tr:nth-child(even) td {
+    background: var(--superficie-2);
+}
+
+/* Elegir hoja de un Excel. */
+.selector-hoja {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.selector-hoja fieldset {
+    display: grid;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-inline-size: 0;
+}
+
+.selector-hoja legend {
+    margin-block-end: 0.5rem;
+    padding: 0;
+    font-weight: 600;
+}
+
+.selector-hoja label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-block-size: 2.75rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--linea);
+    border-radius: var(--radio-control);
+    cursor: pointer;
+    transition: background-color var(--transicion), border-color var(--transicion);
+}
+
+.selector-hoja label:hover {
+    border-color: var(--acento);
+    background: var(--acento-suave);
+}
+
+.selector-hoja label:has(:checked) {
+    border-color: var(--acento);
+    background: var(--acento-suave);
+}
+
+.selector-hoja input[type="radio"] {
+    inline-size: 1.125rem;
+    block-size: 1.125rem;
+    margin: 0;
+    accent-color: var(--acento);
+}
+
+.selector-hoja button {
+    justify-self: start;
+}
+
+/* Subir un archivo. */
+.subida {
+    display: grid;
+    gap: 0.75rem;
+    padding-block-start: 1.25rem;
+    border-block-start: 1px solid var(--linea);
+}
+
+.subida label {
+    font-weight: 600;
+}
+
+.subida input[type="file"] {
+    inline-size: 100%;
+    min-inline-size: 0;
+    padding: 0.5rem;
+    border: 1px solid var(--linea);
+    border-radius: var(--radio-control);
+    background: var(--superficie);
+    color: var(--texto-suave);
+    font: inherit;
+}
+
+.subida input[type="file"][aria-invalid="true"] {
+    border: 1.5px solid var(--aviso-borde);
+}
+
+.subida input[type="file"]::file-selector-button {
+    margin-inline-end: 0.75rem;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--acento);
+    border-radius: var(--radio-control);
+    background: transparent;
+    color: var(--acento);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.subida input[type="file"]::file-selector-button:hover {
+    background: var(--acento-suave);
+}
+
+.subida button {
+    justify-self: start;
+}
+
+/* Confirmar y lo que explica por qué todavía no se puede. */
+.confirmar {
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+    margin-block-start: 2rem;
+}
+
+.confirmar form {
+    margin: 0;
+}
+
+.confirmar .falta {
+    color: var(--texto-suave);
+}
+
+.confirmar [role="alert"],
+.confirmar [role="status"] {
+    max-inline-size: 48rem;
+}

@@ -1,0 +1,190 @@
+/* Tokens y componentes comunes de Conciliador (ver DESIGN.md). Solo CSS local: sin CDN ni fuentes externas. */
+:root {
+    color-scheme: light;
+
+    --fondo: oklch(98% 0.01 300);
+    --superficie: oklch(99.6% 0.004 300);
+    --superficie-2: oklch(95.5% 0.02 300);
+    --linea: oklch(88% 0.03 300);
+    --texto: oklch(25% 0.045 300);
+    --texto-suave: oklch(42% 0.05 300);
+    --acento: oklch(47% 0.17 295);
+    --acento-fuerte: oklch(40% 0.17 295);
+    --acento-suave: oklch(93% 0.04 300);
+    --aviso-borde: oklch(36% 0.14 295);
+    --aviso-fondo: oklch(94% 0.05 300);
+
+    --radio-tarjeta: 0.75rem;
+    --radio-control: 0.5rem;
+    --sombra: 0 1px 2px oklch(30% 0.05 300 / 0.06), 0 8px 24px oklch(30% 0.05 300 / 0.07);
+    --transicion: 150ms ease-out;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--fondo);
+    color: var(--texto);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    -webkit-text-size-adjust: 100%;
+}
+
+::selection {
+    background: var(--acento-suave);
+    color: var(--texto);
+}
+
+main {
+    max-inline-size: 72rem;
+    margin-inline: auto;
+    padding: 2rem 1.5rem 4rem;
+}
+
+h1,
+h2 {
+    margin: 0;
+    line-height: 1.2;
+    text-wrap: balance;
+}
+
+h1 {
+    font-size: 2.07rem;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+}
+
+h2 {
+    font-size: 1.44rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+p {
+    margin: 0;
+}
+
+a {
+    color: var(--acento);
+    text-underline-offset: 0.2em;
+}
+
+a:hover {
+    color: var(--acento-fuerte);
+}
+
+:focus-visible {
+    outline: 3px solid var(--acento);
+    outline-offset: 2px;
+}
+
+/* Barra superior común: la marca o el enlace de vuelta. */
+.barra {
+    max-inline-size: 72rem;
+    margin-inline: auto;
+    padding: 1.5rem 1.5rem 0;
+}
+
+.marca {
+    font-size: 1.2rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    color: var(--acento);
+}
+
+.volver {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-block-size: 2.75rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.volver:hover {
+    text-decoration: underline;
+}
+
+/* Flecha dibujada con bordes: no depende de ningún glifo ni de una fuente. */
+.volver::before {
+    content: "";
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    border-block-end: 2px solid currentColor;
+    border-inline-start: 2px solid currentColor;
+    transform: rotate(45deg);
+}
+
+/* Botones: primario relleno, secundario con borde. */
+.boton,
+button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-block-size: 2.75rem;
+    padding: 0.5rem 1.25rem;
+    border: 1px solid var(--acento);
+    border-radius: var(--radio-control);
+    background: var(--acento);
+    color: oklch(99% 0.005 300);
+    font: inherit;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color var(--transicion), border-color var(--transicion), box-shadow var(--transicion);
+}
+
+.boton:hover,
+button:hover:not(:disabled) {
+    background: var(--acento-fuerte);
+    border-color: var(--acento-fuerte);
+    color: oklch(99% 0.005 300);
+}
+
+.boton-secundario {
+    background: transparent;
+    color: var(--acento);
+}
+
+.boton-secundario:hover {
+    background: var(--acento-suave);
+    border-color: var(--acento-fuerte);
+    color: var(--acento-fuerte);
+}
+
+button:disabled {
+    border-color: var(--linea);
+    background: var(--superficie-2);
+    color: var(--texto-suave);
+    cursor: not-allowed;
+}
+
+/* Avisos (P1, rechazos, estado): borde completo y texto fuerte, sin cambiar de matiz. */
+[role="alert"] {
+    padding: 0.75rem 1rem;
+    border: 1.5px solid var(--aviso-borde);
+    border-radius: var(--radio-control);
+    background: var(--aviso-fondo);
+    font-weight: 600;
+}
+
+[role="status"] {
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--linea);
+    border-radius: var(--radio-control);
+    background: var(--acento-suave);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
+    }
+}

@@ -1,41 +1,88 @@
-/* Estilos mínimos y locales de la página inicial. El diseño final se hace en la tarea T9 con /impeccable. */
-body {
-    font-family: system-ui, sans-serif;
-    margin: 0;
-    padding: 2rem 1rem;
+/* Página inicial y confirmación de cambio de tipo. Los tokens vienen de base.css. */
+/* El main usa el ancho de la barra (como la marca) y el contenido se limita por dentro, para que todo alinee a la izquierda. */
+.inicio {
+    padding-block-start: 3rem;
 }
 
-main {
-    max-width: 48rem;
-    margin: 0 auto;
+.inicio h1,
+.inicio .tipos,
+.inicio [role="alert"] {
+    max-inline-size: 52rem;
+}
+
+.inicio h1 {
+    margin-block-end: 2rem;
+}
+
+.inicio [role="alert"] {
+    margin-block-end: 1.5rem;
 }
 
 .tipos {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 1.25rem;
+}
+
+/* Cada tipo es un botón grande dentro de su formulario; el aspecto de tarjeta lo da el propio botón. */
+.tipos form {
+    display: contents;
 }
 
 .tipos button {
-    width: 100%;
-    height: 100%;
-    padding: 1rem;
-    text-align: left;
-    font: inherit;
-    cursor: pointer;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    inline-size: 100%;
+    min-block-size: 8.5rem;
+    padding: 1.5rem;
+    border: 1px solid var(--linea);
+    border-radius: var(--radio-tarjeta);
+    background: var(--superficie);
+    box-shadow: var(--sombra);
+    color: var(--texto);
+    text-align: start;
+    font-weight: 400;
+}
+
+.tipos button:hover {
+    border-color: var(--acento);
+    background: var(--acento-suave);
+    color: var(--texto);
 }
 
 .tipo-nombre {
-    display: block;
-    font-weight: bold;
+    font-size: 1.44rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--acento);
 }
 
-.tipos button:focus-visible {
-    outline: 3px solid currentColor;
-    outline-offset: 2px;
+.tipo-ayuda {
+    color: var(--texto-suave);
 }
 
-[role="alert"] {
-    padding: 0.75rem 1rem;
-    border: 2px solid currentColor;
+/* Confirmación del cambio de tipo. */
+.confirmacion {
+    padding-block-start: 3rem;
+}
+
+.confirmacion > * {
+    max-inline-size: 40rem;
+}
+
+.confirmacion h1 {
+    margin-block-end: 1.5rem;
+}
+
+.confirmacion [role="alert"] {
+    margin-block-end: 2rem;
+}
+
+.confirmacion .acciones {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
 }

@@ -60,7 +60,10 @@ Paquete base `com.proyecto.Coinciliador`.
 - `InicioController`: `GET /` (las tarjetas de los tipos y, si corresponde, el mensaje P1), `POST /conciliacion/{slug}` (elegir), `GET /conciliacion/{slug}/confirmar` (aviso D1) y `POST /conciliacion/{slug}/descartar`; un tipo inexistente vuelve a `/` con P1 sin tocar la carga.
 - `templates/inicio.html`: la página inicial; cada tipo es un formulario `POST` con un botón, sin JavaScript.
 - `templates/confirmar-cambio.html`: pide confirmar el cambio de tipo; "Cancelar" es un enlace a `/` y "Descartar y continuar" un botón aparte.
-- `static/css/inicio.css`: estilos mínimos y locales (sin CDN); el diseño final llega en la tarea T9.
+- `static/css/base.css`: tokens de color (paleta monocromática lila), tipografía, botones, avisos y foco, comunes a todas las pantallas; sin CDN ni fuentes externas.
+- `static/css/inicio.css`: tarjetas de tipo de la página inicial y pantalla de confirmación.
+- `static/css/carga.css`: pantalla de carga (spec 001, T21): tarjetas de lugar, vista previa, selector de hoja y Confirmar.
+- `PRODUCT.md` y `DESIGN.md` (raíz): contexto de producto y sistema visual que usan las dos specs.
 
 **`service/` (spec 002, página inicial)**
 - `IConciliacionService` y `ConciliacionService`: elegir el tipo (abre la carga o pide confirmar si habría que descartar archivos), decidir qué pasaría sin cambiar nada (para las páginas que se piden con GET), descartar y abrir una carga vacía del tipo nuevo, y consultar el tipo activo.
