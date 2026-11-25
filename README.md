@@ -77,7 +77,7 @@ Paquete base `com.proyecto.Coinciliador`.
 
 **`service/`**
 - `ILectorCsvService` y `LectorCsvService`: leen un CSV. Rechazan con M3 (vacío), M5 (no es texto o comillas sin cerrar) o M4 (más de 100.000 filas con datos). Si es válido, detectan codificación y separador, cuentan las filas con datos y arman la vista previa.
-- `LectorExcelService`: por ahora solo abre un Excel con POI detectando `.xls` o `.xlsx` por su contenido; rechaza con M3 (vacío), M5 (no es Excel o está dañado) o M6 (cifrado con contraseña). Las hojas y el resumen se suman en T10 y T11.
+- `ILectorExcelService` y `LectorExcelService`: leen un Excel con POI. Lo abren por contenido (`.xls` o `.xlsx`) y rechazan con M3 (sin hojas listables), M5 (no es Excel o dañado) o M6 (cifrado). Calculan las hojas listables (visibles y con al menos una fila con datos): con una devuelven el archivo válido con su resumen; con varias, queda pendiente de elegir hoja.
 
 **Pruebas (`src/test`)**
-- `FabricaArchivosPrueba`: genera por código los CSV, los Excel mínimos (`.xlsx` y `.xls`) y los Excel cifrados de los tests, con datos ficticios.
+- `FabricaArchivosPrueba`: genera por código los CSV, los Excel (`.xlsx` y `.xls`) con las hojas que pida el test, y los Excel cifrados, con datos ficticios.

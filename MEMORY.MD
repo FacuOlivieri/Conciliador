@@ -2,14 +2,15 @@
 
 ## Estado actual (2026-11-25)
 - Spec activa: `Coinciliador/specs/001-subida-archivos-csv/` (spec y plan aprobados).
-- Tareas: 9 de 22 hechas (T1–T9). Bloque B (lectura de archivos) va por T10.
-- `./mvnw test` en verde (95 tests) al cerrar T9. T9 todavía sin commit.
-- Siguiente paso: commit de T9 y luego `/sdd-implement 001-subida-archivos-csv T10` (hojas listables en `LectorExcelService`).
+- Tareas: 10 de 22 hechas (T1–T10). Bloque B (lectura de archivos) va por T11.
+- `./mvnw test` en verde (101 tests) al cerrar T10. T10 todavía sin commit.
+- Siguiente paso: commit de T10 y luego `/sdd-implement 001-subida-archivos-csv T11` (resumen de hoja y formato de celdas).
 
 ## Decisiones
-- `LectorExcelService.abrir(byte[])` es de paquete (no público) y devuelve un `Workbook` POI que quien lo llama debe cerrar. La interfaz `ILectorExcelService` se crea en T10, cuando exista `leer`, para no exponer tipos de POI en el contrato. M6 sale de `EncryptedDocumentException`; cualquier otra falla de POI es M5.
+- T10 ya arma el `Resumen` de la hoja con `DataFormatter` (columnas alineadas desde A). T11 solo afina: locale `es-AR`, fórmulas, `#REF!`, combinadas, filas ocultas y M4. Hoja de gráfico: queda afuera porque no tiene filas, pero no hay test (POI 5.5.1 no permite crear una).
+- `LectorExcelService.abrir(byte[])` es de paquete y devuelve un `Workbook` POI que quien lo llama debe cerrar; la interfaz `ILectorExcelService` solo expone `leer`, sin tipos de POI. M6 sale de `EncryptedDocumentException`; cualquier otra falla de POI al abrir es M5.
 - Los lectores lanzan `ArchivoRechazadoException` y no devuelven el rechazo: `CargaService` (T14) lo atrapa y arma el estado `Rechazado`. `LectorCsvService.leer` devuelve `EstadoLugar.Valido`. No se propaga la causa de la excepción de Commons CSV (puede traer datos del archivo, RNF-3).
-- `FabricaArchivosPrueba` (en `src/test/.../helper/`) tiene `csv(...)`, `filasFicticias(n)`, `xlsxMinimo()`, `xlsMinimo()`, `xlsxCifrado(clave)` y `xlsCifrado(clave)`; T10 y T11 le suman libros con varias hojas, ocultas, fórmulas y combinadas.
+- `FabricaArchivosPrueba` (en `src/test/.../helper/`) tiene `csv(...)`, `filasFicticias(n)`, `xlsx(armado)`, `xls(armado)`, `hojaConDatos`, `hojaVacia`, `xlsxMinimo()`, `xlsMinimo()` y los cifrados; T11 le suma fórmulas, combinadas y filas ocultas.
 - Las restricciones `@ExtensionPermitida` y `@TamanoMaximo` llevan como mensaje el código `"M1"`/`"M2"` (una anotación no admite el texto del enum); el controlador lo traduce con `MensajeCarga.valueOf`. Sin archivo (`null`) la extensión falla con M1.
 - `SeparadorHelper`: el puntaje de un separador es cuántas líneas repiten su misma cuenta (>0); no se maneja un campo entrecomillado que cruce líneas (el lector CSV de T8 parsea con Commons CSV igual).
 - `AcumuladorFilas` es la única clase con estado del paquete helper (una instancia por lectura); las filas vacías no cuentan para el límite de 100.000 y la vista previa guarda las 10 primeras filas con datos.

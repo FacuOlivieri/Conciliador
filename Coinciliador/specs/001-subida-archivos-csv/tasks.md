@@ -54,7 +54,7 @@ Si preferís partir la spec (por ejemplo, 001 CSV + interfaz y 002 Excel), se pu
 [x] **T9. Fábrica de Excel de prueba y apertura en `LectorExcelService`.** RF-6, RF-9, RF-10, RF-11
   - Hecho cuando: `LectorExcelServiceAperturaTest` pasa con: 0 bytes → M3; bytes aleatorios con extensión `.xlsx` → M5; `.xlsx` y `.xls` cifrados con contraseña → M6; `.xlsx` renombrado a `.xls` y `.xls` renombrado a `.xlsx` → se leen.
 
-[ ] **T10. Hojas listables en `LectorExcelService`.** RF-6, RF-14, RF-15
+[x] **T10. Hojas listables en `LectorExcelService`.** RF-6, RF-14, RF-15
   - Hecho cuando: `LectorExcelServiceHojasTest` pasa con: una hoja con datos → `Valido`; tres hojas con datos → `PendienteDeHoja` con sus tres nombres; hojas ocultas y vacías fuera de la lista; única hoja con datos oculta → M3.
 
 [ ] **T11. Resumen de hoja y formato de celdas.** RF-7, RF-18 (decisiones D9 y D10)

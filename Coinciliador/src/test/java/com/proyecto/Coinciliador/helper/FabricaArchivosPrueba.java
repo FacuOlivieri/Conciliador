@@ -8,6 +8,7 @@ import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.security.GeneralSecurityException;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.IntStream;
 import org.apache.poi.hssf.record.crypto.Biff8EncryptionKey;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -17,6 +18,7 @@ import org.apache.poi.poifs.crypt.EncryptionInfo;
 import org.apache.poi.poifs.crypt.EncryptionMode;
 import org.apache.poi.poifs.crypt.Encryptor;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -86,9 +88,35 @@ public final class FabricaArchivosPrueba {
         }
     }
 
+    /** Un .xlsx armado por el test: recibe el libro vacío y le agrega las hojas que necesite. */
+    public static byte[] xlsx(Consumer<Workbook> armado) {
+        return escribir(new XSSFWorkbook(), armado);
+    }
+
+    /** Igual que {@link #xlsx(Consumer)}, pero en el formato binario antiguo .xls. */
+    public static byte[] xls(Consumer<Workbook> armado) {
+        return escribir(new HSSFWorkbook(), armado);
+    }
+
+    /** Agrega una hoja visible con {@link #TEXTO_CELDA} en A1. */
+    public static Sheet hojaConDatos(Workbook libro, String nombre) {
+        Sheet hoja = libro.createSheet(nombre);
+        hoja.createRow(0).createCell(0).setCellValue(TEXTO_CELDA);
+        return hoja;
+    }
+
+    /** Agrega una hoja visible sin ninguna fila. */
+    public static Sheet hojaVacia(Workbook libro, String nombre) {
+        return libro.createSheet(nombre);
+    }
+
     private static byte[] conUnaCelda(Workbook libro) {
+        return escribir(libro, armado -> hojaConDatos(armado, "Hoja1"));
+    }
+
+    private static byte[] escribir(Workbook libro, Consumer<Workbook> armado) {
         try (libro; ByteArrayOutputStream salida = new ByteArrayOutputStream()) {
-            libro.createSheet("Hoja1").createRow(0).createCell(0).setCellValue(TEXTO_CELDA);
+            armado.accept(libro);
             libro.write(salida);
             return salida.toByteArray();
         } catch (IOException e) {
