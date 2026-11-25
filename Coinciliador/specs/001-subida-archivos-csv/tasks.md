@@ -22,7 +22,7 @@ Si preferís partir la spec (por ejemplo, 001 CSV + interfaz y 002 Excel), se pu
 ## Bloque A — Núcleo puro
 
 [x] **T1. Modelo base: enums, records y excepción.** RF-1, RF-4–RF-10, RF-20, RF-23, RNF-4
-  - Crea `Lugar`, `FormatoArchivo`, `MensajeCarga` (M1–M8), `ArchivoCargado`, `Resumen`, `EstadoLugar` (sellada: `Vacio`, `Rechazado`, `PendienteDeHoja`, `Valido`) y `ArchivoRechazadoException`.
+  - Crea `Lugar`, `FormatoArchivo`, `MensajeCarga` (M1–M8; M9–M11 se sumaron en T16), `ArchivoCargado`, `Resumen`, `EstadoLugar` (sellada: `Vacio`, `Rechazado`, `PendienteDeHoja`, `Valido`) y `ArchivoRechazadoException`.
   - Hecho cuando: `MensajeCargaTest` comprueba que hay exactamente 8 mensajes y que cada texto es idéntico al catálogo de la spec; `LugarTest` comprueba las etiquetas "Propio" y "Contraparte".
 
 [x] **T2. `ExtensionHelper`.** RF-3, RF-4
@@ -77,7 +77,7 @@ Si preferís partir la spec (por ejemplo, 001 CSV + interfaz y 002 Excel), se pu
 [x] **T15. `CargaService`: elegir hoja y confirmar.** RF-16, RF-17, RF-22, RF-23
   - Hecho cuando: `CargaServiceHojaYConfirmacionTest` pasa con: elegir hoja en `PendienteDeHoja` → `Valido` sin volver a subir; cambiar a otra hoja actualiza el resumen; hoja inexistente se ignora; confirmar con un lugar no válido no confirma; confirmar con ambos válidos → confirmada.
 
-[ ] **T16. `PantallaCargaDto` y `PantallaCargaMapper`.** RF-18, RF-20, RF-21, RF-22, RF-24
+[x] **T16. `PantallaCargaDto` y `PantallaCargaMapper`.** RF-18, RF-20, RF-21, RF-22, RF-24
   - Cambio por la spec 002: `PantallaCargaDto` suma `tituloTipo` (nombre del tipo activo).
   - Hecho cuando: `PantallaCargaMapperTest` pasa con: Confirmar deshabilitado y texto de qué falta si un lugar no es válido; M7 cuando las huellas coinciden, aunque los nombres difieran; CSV + Excel ambos válidos → Confirmar habilitado; M8 solo si la carga está confirmada; `tituloTipo` es el nombre del tipo activo.
 

@@ -50,7 +50,7 @@ Paquete base `com.proyecto.Coinciliador`.
 **`model/`**
 - `Lugar`: los dos lugares de carga, Propio y Contraparte, con su etiqueta para la vista.
 - `FormatoArchivo`: formato real del archivo (CSV o EXCEL; `.xls` y `.xlsx` son ambos EXCEL).
-- `MensajeCarga`: catálogo de mensajes M1–M8 de la spec 001; única fuente de esos textos.
+- `MensajeCarga`: catálogo de mensajes M1–M11 de la spec 001; única fuente de esos textos. M9–M11 son los fragmentos de "qué falta" para confirmar.
 - `ArchivoCargado`: archivo aceptado con sus bytes, huella y datos para releerlo (hojas o separador y codificación).
 - `Resumen`: lo que ve el contador de un archivo válido: nombre, hoja, cantidad de filas y vista previa.
 - `EstadoLugar`: interfaz sellada con los estados de un lugar: `Vacio`, `Rechazado`, `PendienteDeHoja`, `Valido`.
@@ -74,6 +74,11 @@ Paquete base `com.proyecto.Coinciliador`.
 **`dto/`**
 - `SubidaArchivoForm`: formulario de subida; el archivo se valida con `@ExtensionPermitida` y `@TamanoMaximo`.
 - `ElegirHojaForm`: nombre de la hoja elegida de un Excel (`@NotBlank`).
+- `LugarVistaDto`: todo lo que la plantilla necesita de un lugar (Propio o Contraparte): su estado (vacío, rechazado, pendiente de hoja o válido), el nombre, el mensaje de rechazo, las hojas, si se muestra el selector de hoja y el resumen con su vista previa.
+- `PantallaCargaDto`: todo lo que necesita la pantalla de carga ya calculado: título del tipo, los dos lugares, si Confirmar está habilitado y el texto de qué falta, la advertencia M7 y el mensaje M8.
+
+**`mapper/`**
+- `PantallaCargaMapper`: convierte la carga en `PantallaCargaDto`. Calcula el título del tipo, habilita Confirmar solo con ambos lugares válidos y explica qué falta, avisa M7 si las huellas de los dos archivos coinciden (aunque los nombres difieran) y muestra M8 solo si la carga está confirmada.
 
 **`utils/validacion/`**
 - `ExtensionPermitida` y `ExtensionPermitidaValidator`: restricción de Bean Validation, el archivo debe ser `.csv`, `.xlsx` o `.xls` (mensaje M1; sin archivo también falla).

@@ -15,7 +15,11 @@ public enum MensajeCarga {
     M5("No se pudo leer el archivo: está dañado o no es un CSV o Excel válido."),
     M6("El archivo está protegido con contraseña. Quitale la contraseña desde Excel y volvé a subirlo."),
     M7("Propio y Contraparte son el mismo archivo. Revisá si es lo que querés conciliar."),
-    M8("Archivos listos para conciliar.");
+    M8("Archivos listos para conciliar."),
+    // M9 a M11 son fragmentos de "qué falta" (RF-22); %s es el nombre del lugar.
+    M9("falta cargar el archivo de %s"),
+    M10("el archivo de %s no es válido"),
+    M11("falta elegir la hoja de %s");
 
     private final String texto;
 }
