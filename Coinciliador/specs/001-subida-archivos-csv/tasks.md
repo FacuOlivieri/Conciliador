@@ -84,7 +84,7 @@ Si preferís partir la spec (por ejemplo, 001 CSV + interfaz y 002 Excel), se pu
 [x] **T17. Configuración de multipart.** RF-5, RNF-1
   - Hecho cuando: `ConfiguracionMultipartTest` (contexto de Spring) comprueba `max-file-size` = 30 MB y `file-size-threshold` mayor que `max-file-size`.
 
-[ ] **T18. `CargaController`: página y subida, con plantilla mínima.** RF-1, RF-4, RF-5, RF-13, RF-19, RNF-2, RNF-4
+[x] **T18. `CargaController`: página y subida, con plantilla mínima.** RF-1, RF-4, RF-5, RF-13, RF-19, RNF-2, RNF-4
   - Plantilla funcional sin diseño, solo con estructura y textos.
   - Cambio por la spec 002: la pantalla es `GET /carga` (ya no `GET /`) y la plantilla suma el título del tipo y el enlace "Volver al inicio" (`href="/"`).
   - Hecho cuando: `CargaControllerSubidaTest` (MockMvc) pasa con: `GET /carga` (con tipo activo) muestra las tarjetas Propio y Contraparte, el nombre del tipo y el enlace `href="/"`; `GET /carga` sin tipo activo redirige a `/` sin mensaje; `POST /carga/PROPIO` redirige a `/carga`; `.ods` → M1 dentro de la tarjeta de Propio; archivo de 10.485.761 bytes → M2; después de subir, un `GET /carga` nuevo sigue mostrando el archivo.

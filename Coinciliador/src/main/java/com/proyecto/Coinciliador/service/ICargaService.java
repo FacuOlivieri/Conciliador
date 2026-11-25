@@ -2,9 +2,13 @@ package com.proyecto.Coinciliador.service;
 
 import com.proyecto.Coinciliador.enums.Lugar;
 import com.proyecto.Coinciliador.enums.MensajeCarga;
+import com.proyecto.Coinciliador.model.Carga;
 
 /** Casos de uso de la carga de archivos (RF-2, RF-13, RF-19). Se completa en T15 con hoja y confirmación. */
 public interface ICargaService {
+
+    /** La carga tal como está ahora, para mostrarla. */
+    Carga cargaActual();
 
     /**
      * Analiza el archivo y lo guarda en ese lugar, reemplazando lo que hubiera (RF-19). Si no sirve,

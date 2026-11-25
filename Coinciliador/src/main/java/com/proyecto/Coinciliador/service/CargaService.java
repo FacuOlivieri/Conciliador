@@ -5,6 +5,7 @@ import com.proyecto.Coinciliador.enums.Lugar;
 import com.proyecto.Coinciliador.enums.MensajeCarga;
 import com.proyecto.Coinciliador.exception.ArchivoRechazadoException;
 import com.proyecto.Coinciliador.model.ArchivoCargado;
+import com.proyecto.Coinciliador.model.Carga;
 import com.proyecto.Coinciliador.model.EstadoLugar;
 import com.proyecto.Coinciliador.repository.ICargaRepository;
 import java.util.Optional;
@@ -22,6 +23,11 @@ public class CargaService implements ICargaService {
     private final IAnalizadorArchivoService analizador;
     private final ILectorExcelService lectorExcel;
     private final ICargaRepository repositorio;
+
+    @Override
+    public Carga cargaActual() {
+        return repositorio.obtener();
+    }
 
     @Override
     public void subir(Lugar lugar, String nombre, byte[] bytes) {
