@@ -61,6 +61,7 @@ No hay linter ni formateador configurados.
 - Cada dependencia nueva lleva un mini tutorial en `Coinciliador/docs/librerias/<libreria>.md` (qué es, para qué la usamos, versión, ejemplos de uso, errores comunes), verificado contra la documentación de la versión fijada
 - Leer `docs/constitution.md` y la spec activa (`specs/NNN-*/`) antes de tocar código.
 - Actualizar el `README` con los cambios generados, con una breve y concisa explicación de lo que hace cada clase y módulo creado
+- Una vez terminado la implementacion de la specificacion, haz el commit. Formato: "feat: spec Sx-Tx, (nombre descriptivo para la spec)"
 
 ## Verificación
 
