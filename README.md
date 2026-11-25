@@ -61,6 +61,9 @@ Paquete base `com.proyecto.Coinciliador`.
 - `templates/inicio.html`: la página inicial; cada tipo es un formulario `POST` con un botón, sin JavaScript.
 - `static/css/inicio.css`: estilos mínimos y locales (sin CDN); el diseño final llega en la tarea T9.
 
+**`service/` (spec 002, página inicial)**
+- `IConciliacionService` y `ConciliacionService`: elegir el tipo (abre la carga o pide confirmar si habría que descartar archivos), descartar y abrir una carga vacía del tipo nuevo, y consultar el tipo activo.
+
 **`dto/`, `mapper/` y `utils/validacion/` (spec 002, página inicial)**
 - `TipoVistaDto`: una tarjeta de la página inicial (slug, nombre y frase de ayuda de un tipo).
 - `InicioDto`: las cuatro tarjetas y, si hay que avisar algo, el texto del mensaje (null si no).

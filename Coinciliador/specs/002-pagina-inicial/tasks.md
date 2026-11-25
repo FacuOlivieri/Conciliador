@@ -46,7 +46,7 @@ El desglose dio **10 tareas**, dentro del máximo, así que no hace falta dividi
 
 Dependencias: T13 (`Carga` con `tipo` y `reiniciar`), T14 y T18 (`CargaController`) de la spec 001, con los ajustes del plan §8 ya aplicados por la otra sesión (ruta `/carga`, `tituloTipo`, enlace de vuelta y redirección sin tipo). Si esos cambios no están, parar y revisar con esa sesión antes de seguir.
 
-[ ] **T6. `ConciliacionService`.** RF-4, RF-6, RF-7, RF-8, RF-9
+[x] **T6. `ConciliacionService`.** RF-4, RF-6, RF-7, RF-8, RF-9
   - Crea `IConciliacionService` y `ConciliacionService` con `elegir`, `descartarYAbrir` y `tipoActivo`, usando el repositorio real en memoria.
   - Hecho cuando: `ConciliacionServiceTest` pasa con: elegir sin carga en curso fija el tipo y devuelve abrir; otro tipo con un archivo válido cargado devuelve pedir confirmación y deja la carga y el tipo intactos; el mismo tipo con carga en curso la deja intacta; `descartarYAbrir` deja ambos lugares vacíos, sin confirmación y con el tipo nuevo.
 
