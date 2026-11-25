@@ -71,7 +71,7 @@ Si preferís partir la spec (por ejemplo, 001 CSV + interfaz y 002 Excel), se pu
   - Cambio por la spec 002: `Carga` suma el campo `tipo` (`TipoConciliacion`, nulo hasta que se elige uno) y `reiniciar(tipo)`; `ICargaRepository` suma `tipoActivo()` y `reiniciar(tipo)`. El enum lo crea la spec 002 (sesión del front): si todavía no está en esta rama, pedirlo antes de empezar.
   - Hecho cuando: `CargaEnMemoriaRepositoryTest` pasa con: guardar Propio no modifica Contraparte; cualquier guardado borra la confirmación; dos lecturas devuelven la misma carga; `tipoActivo()` empieza en nada; `reiniciar(tipo)` deja ambos lugares en `Vacio` (también si uno estaba `Rechazado`), sin confirmación y con ese tipo.
 
-[ ] **T14. `CargaService`: subir, rechazar y reemplazar.** RF-2, RF-13, RF-19
+[x] **T14. `CargaService`: subir, rechazar y reemplazar.** RF-2, RF-13, RF-19
   - Hecho cuando: `CargaServiceSubidaTest` pasa con: rechazo en Contraparte → Propio válido se conserva; reemplazar un Excel ya elegido descarta la hoja; reemplazar un archivo válido por uno inválido deja el lugar en `Rechazado`.
 
 [ ] **T15. `CargaService`: elegir hoja y confirmar.** RF-16, RF-17, RF-22, RF-23
