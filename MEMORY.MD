@@ -2,9 +2,9 @@
 
 ## Estado actual (2026-11-25)
 - Spec activa: `Coinciliador/specs/001-subida-archivos-csv/` (spec y plan aprobados).
-- Tareas: 4 de 22 hechas (T1–T4). Bloque A (núcleo puro) va por T5.
-- `./mvnw test` en verde (51 tests) al cerrar T4. T3 y T4 todavía sin commit.
-- Siguiente paso: commits de T3 y T4 (`feat: spec S1-T4, AcumuladorFilas y HuellaHelper`) y luego `/sdd-implement 001-subida-archivos-csv T5` (`CodificacionHelper`).
+- Tareas: 5 de 22 hechas (T1–T5). Bloque A (núcleo puro) va por T6.
+- `./mvnw test` en verde (59 tests) al cerrar T5. T5 todavía sin commit.
+- Siguiente paso: commit de T5 y luego `/sdd-implement 001-subida-archivos-csv T6` (`SeparadorHelper`).
 
 ## Decisiones
 - `AcumuladorFilas` es la única clase con estado del paquete helper (una instancia por lectura); las filas vacías no cuentan para el límite de 100.000 y la vista previa guarda las 10 primeras filas con datos.

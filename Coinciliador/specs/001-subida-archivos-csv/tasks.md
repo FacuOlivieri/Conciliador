@@ -34,7 +34,7 @@ Si preferís partir la spec (por ejemplo, 001 CSV + interfaz y 002 Excel), se pu
 [x] **T4. `AcumuladorFilas` y `HuellaHelper`.** RF-6, RF-7, RF-20
   - Hecho cuando: `AcumuladorFilasTest` pasa con filas vacías ignoradas, solo las primeras 10 guardadas, 100.000 filas aceptadas y la fila 100.001 → `ArchivoRechazadoException` con M4; `HuellaHelperTest` comprueba el SHA-256 conocido de un texto fijo y que dos arreglos iguales dan la misma huella.
 
-[ ] **T5. `CodificacionHelper`.** RF-8, RF-12
+[x] **T5. `CodificacionHelper`.** RF-8, RF-12
   - Hecho cuando: `CodificacionHelperTest` pasa con texto UTF-8 con acentos → UTF-8, el mismo texto en Windows-1252 → Windows-1252, bytes con 0x00 → no es texto, y BOM inicial eliminado.
 
 [ ] **T6. `SeparadorHelper`.** RF-12

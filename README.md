@@ -61,6 +61,7 @@ Paquete base `com.proyecto.Coinciliador`.
 - `VistaPreviaHelper`: recorta las filas para la vista previa: 10 filas, 20 columnas y celdas de hasta 50 caracteres (el recorte termina en "…").
 - `AcumuladorFilas`: recibe las filas de a una; cuenta las que tienen datos, guarda las 10 primeras para la vista previa y rechaza con M4 al pasar las 100.000 filas.
 - `HuellaHelper`: calcula el SHA-256 de los bytes de un archivo en hexadecimal, para detectar que Propio y Contraparte son el mismo.
+- `CodificacionHelper`: decide si unos bytes son texto (sin 0x00), detecta si el CSV está en UTF-8 o Windows-1252 y quita el BOM inicial.
 
 **`exception/`**
 - `ArchivoRechazadoException`: rechazo de un archivo con su `MensajeCarga`; no lleva nombre ni contenido.
