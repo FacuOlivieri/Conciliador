@@ -236,6 +236,7 @@ Estados de cada tarjeta:
 | `spring.servlet.multipart.max-file-size` | `30MB` | Límite técnico. El límite de negocio (10.485.760 bytes) lo aplica `@TamanoMaximo` para poder indicar el lugar (RF-13) y testear el borde exacto (RF-5). El default de Spring es 1MB. |
 | `spring.servlet.multipart.max-request-size` | `30MB` | Un archivo por request. |
 | `spring.servlet.multipart.file-size-threshold` | `31MB` | Por encima del máximo: el archivo nunca se escribe en disco (RNF-1). El default es `0B`, que escribe todo a un temporal. |
+| `server.tomcat.max-swallow-size` | `-1` | Agregada en T19: sin esto Tomcat corta la conexión al rechazar un archivo de más de 30 MB y el navegador no llega a ver M2 (RF-5). Sin límite porque es una app local de un solo usuario. |
 
 ## 6. Decisiones técnicas
 
