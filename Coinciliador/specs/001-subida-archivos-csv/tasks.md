@@ -94,7 +94,7 @@ Si preferís partir la spec (por ejemplo, 001 CSV + interfaz y 002 Excel), se pu
   - Cambio por la spec 002: los tests parten de `GET /carga` y todas las redirecciones van a `/carga`.
   - Hecho cuando: `CargaControllerHojaYConfirmacionTest` pasa con: Excel con varias hojas → se muestran las opciones sin preselección; `POST /carga/CONTRAPARTE/hoja` → resumen visible; botón Confirmar con `disabled` hasta tener dos válidos; tras confirmar aparece M8 y la redirección va a `/carga`; un archivo de más de 30 MB → M2 en la tarjeta correcta.
 
-[ ] **T20. Nada sensible en los logs.** RNF-3
+[x] **T20. Nada sensible en los logs.** RNF-3
   - Hecho cuando: `LogsSinDatosTest` (con `OutputCaptureExtension`) sube un archivo con nombre y contenido marcados y comprueba que ninguno de los dos aparece en la salida, tanto en una subida válida como en una rechazada.
 
 [ ] **T21. Diseño visual con `/impeccable`.** RF-18 (presentación), RNF-5

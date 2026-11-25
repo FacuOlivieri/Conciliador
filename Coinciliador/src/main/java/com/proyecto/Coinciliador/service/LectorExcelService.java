@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Function;
 import java.util.stream.IntStream;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -40,17 +41,31 @@ public class LectorExcelService implements ILectorExcelService {
     @Override
     public EstadoLugar leer(String nombre, byte[] bytes) {
         DataFormatter formato = new DataFormatter(ES_AR); // no es seguro entre hilos: uno por lectura
+        return conLibro(bytes, libro -> estadoSegunHojas(libro, nombre, bytes, formato));
+    }
+
+    private EstadoLugar estadoSegunHojas(Workbook libro, String nombre, byte[] bytes, DataFormatter formato) {
+        List<String> listables = hojasListables(libro, formato);
+        if (listables.isEmpty()) {
+            throw new ArchivoRechazadoException(MensajeCarga.M3);
+        }
+        ArchivoCargado archivo = ArchivoCargado.excel(nombre, bytes, HuellaHelper.sha256(bytes), listables);
+        if (listables.size() > 1) {
+            return new EstadoLugar.PendienteDeHoja(archivo);
+        }
+        return new EstadoLugar.Valido(archivo, resumenDeHoja(nombre, libro.getSheet(listables.get(0)), formato));
+    }
+
+    /**
+     * Abre el libro, aplica la lectura y lo cierra. Un daño que aparece recién al leer las celdas también es M5
+     * (RF-9). La causa no se propaga: su mensaje puede traer datos del archivo y terminar en los registros (RNF-3).
+     */
+    private <T> T conLibro(byte[] bytes, Function<Workbook, T> lectura) {
         try (Workbook libro = abrir(bytes)) {
-            List<String> listables = hojasListables(libro, formato);
-            if (listables.isEmpty()) {
-                throw new ArchivoRechazadoException(MensajeCarga.M3);
-            }
-            ArchivoCargado archivo = ArchivoCargado.excel(nombre, bytes, HuellaHelper.sha256(bytes), listables);
-            if (listables.size() > 1) {
-                return new EstadoLugar.PendienteDeHoja(archivo);
-            }
-            return new EstadoLugar.Valido(archivo, resumenDeHoja(nombre, libro.getSheet(listables.get(0)), formato));
-        } catch (IOException e) {
+            return lectura.apply(libro);
+        } catch (ArchivoRechazadoException e) {
+            throw e;
+        } catch (IOException | RuntimeException e) {
             throw new ArchivoRechazadoException(MensajeCarga.M5);
         }
     }
@@ -77,11 +92,8 @@ public class LectorExcelService implements ILectorExcelService {
 
     @Override
     public Resumen resumirHoja(ArchivoCargado archivo, String hoja) {
-        try (Workbook libro = abrir(archivo.bytes())) {
-            return resumenDeHoja(archivo.nombre(), libro.getSheet(hoja), new DataFormatter(ES_AR));
-        } catch (IOException e) {
-            throw new ArchivoRechazadoException(MensajeCarga.M5);
-        }
+        return conLibro(archivo.bytes(),
+                libro -> resumenDeHoja(archivo.nombre(), libro.getSheet(hoja), new DataFormatter(ES_AR)));
     }
 
     /** Hojas visibles con al menos una fila con datos. Una hoja de gráfico no tiene filas, así que queda afuera. */

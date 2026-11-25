@@ -6,10 +6,14 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 import org.apache.poi.hssf.record.crypto.Biff8EncryptionKey;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -130,6 +134,41 @@ public final class FabricaArchivosPrueba {
     /** Agrega una hoja visible sin ninguna fila. */
     public static Sheet hojaVacia(Workbook libro, String nombre) {
         return libro.createSheet(nombre);
+    }
+
+    /** Un .xlsx que se abre bien pero trae texto en una celda numérica: falla recién al leer esa celda. */
+    public static byte[] xlsxConCeldaDanada(String contenido) {
+        byte[] sano = xlsx(libro -> libro.createSheet("Datos").createRow(0).createCell(0).setCellValue(123456));
+        return reemplazarEnEntrada(sano, "xl/worksheets/sheet1.xml", "<v>123456.0</v>", "<v>" + contenido + "</v>");
+    }
+
+    // Un .xlsx es un zip: se copia entrada por entrada, cambiando el texto de una sola.
+    private static byte[] reemplazarEnEntrada(byte[] zip, String nombre, String buscado, String reemplazo) {
+        try (ZipInputStream entrada = new ZipInputStream(new ByteArrayInputStream(zip));
+             ByteArrayOutputStream salida = new ByteArrayOutputStream();
+             ZipOutputStream nuevo = new ZipOutputStream(salida)) {
+            for (ZipEntry parte = entrada.getNextEntry(); parte != null; parte = entrada.getNextEntry()) {
+                byte[] datos = entrada.readAllBytes();
+                if (parte.getName().equals(nombre)) {
+                    datos = reemplazar(datos, buscado, reemplazo);
+                }
+                nuevo.putNextEntry(new ZipEntry(parte.getName()));
+                nuevo.write(datos);
+                nuevo.closeEntry();
+            }
+            nuevo.finish();
+            return salida.toByteArray();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    private static byte[] reemplazar(byte[] datos, String buscado, String reemplazo) {
+        String texto = new String(datos, StandardCharsets.UTF_8);
+        if (!texto.contains(buscado)) {
+            throw new IllegalStateException("El .xlsx de prueba no contiene " + buscado);
+        }
+        return texto.replace(buscado, reemplazo).getBytes(StandardCharsets.UTF_8);
     }
 
     private static byte[] conUnaCelda(Workbook libro) {
