@@ -37,7 +37,7 @@ Si preferís partir la spec (por ejemplo, 001 CSV + interfaz y 002 Excel), se pu
 [x] **T5. `CodificacionHelper`.** RF-8, RF-12
   - Hecho cuando: `CodificacionHelperTest` pasa con texto UTF-8 con acentos → UTF-8, el mismo texto en Windows-1252 → Windows-1252, bytes con 0x00 → no es texto, y BOM inicial eliminado.
 
-[ ] **T6. `SeparadorHelper`.** RF-12
+[x] **T6. `SeparadorHelper`.** RF-12
   - Hecho cuando: `SeparadorHelperTest` pasa con líneas separadas por `;`, `,` y tabulación, un `;` dentro de comillas que no cuenta, y empate → `;`.
 
 [ ] **T7. Validaciones con Bean Validation y formularios.** RF-3, RF-4, RF-5, regla 5
