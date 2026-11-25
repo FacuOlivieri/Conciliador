@@ -54,7 +54,7 @@ Paquete base `com.proyecto.Coinciliador`.
 - `ArchivoCargado`: archivo aceptado con sus bytes, huella y datos para releerlo (hojas o separador y codificación).
 - `Resumen`: lo que ve el contador de un archivo válido: nombre, hoja, cantidad de filas y vista previa.
 - `EstadoLugar`: interfaz sellada con los estados de un lugar: `Vacio`, `Rechazado`, `PendienteDeHoja`, `Valido`.
-- `Carga`: la única carga de la aplicación: estado de Propio y Contraparte, si fue confirmada y su tipo de conciliación (nulo hasta que se elige). Es inmutable: cada cambio devuelve una carga nueva; cambiar un lugar borra la confirmación y `vacia(tipo)` la deja sin archivos ni rechazos.
+- `Carga`: la única carga de la aplicación: estado de Propio y Contraparte, si fue confirmada y su tipo de conciliación (nulo hasta que se elige). Es inmutable: cada cambio devuelve una carga nueva; cambiar un lugar borra la confirmación; `vacia(tipo)` la deja sin archivos ni rechazos y `ambosValidos()` dice si Propio y Contraparte son válidos.
 
 **`helper/`**
 - `ExtensionHelper`: extensión de un nombre de archivo en minúsculas y si es una de las permitidas (`csv`, `xlsx`, `xls`).
@@ -81,9 +81,9 @@ Paquete base `com.proyecto.Coinciliador`.
 
 **`service/`**
 - `ILectorCsvService` y `LectorCsvService`: leen un CSV. Rechazan con M3 (vacío), M5 (no es texto o comillas sin cerrar) o M4 (más de 100.000 filas con datos). Si es válido, detectan codificación y separador, cuentan las filas con datos y arman la vista previa.
-- `ILectorExcelService` y `LectorExcelService`: leen un Excel con POI. Lo abren por contenido (`.xls` o `.xlsx`) y rechazan con M3 (sin hojas listables), M4 (más de 100.000 filas con datos), M5 (no es Excel o dañado) o M6 (cifrado). Calculan las hojas listables (visibles y con al menos una fila con datos): con una devuelven el archivo válido con su resumen; con varias, queda pendiente de elegir hoja. Las celdas se muestran como en Excel, con números en es-AR; de una fórmula se muestra su resultado guardado y los errores (`#REF!`) tal cual.
+- `ILectorExcelService` y `LectorExcelService`: leen un Excel con POI. Lo abren por contenido (`.xls` o `.xlsx`) y rechazan con M3 (sin hojas listables), M4 (más de 100.000 filas con datos), M5 (no es Excel o dañado) o M6 (cifrado). Calculan las hojas listables (visibles y con al menos una fila con datos): con una devuelven el archivo válido con su resumen; con varias, queda pendiente de elegir hoja. `resumirHoja` arma el resumen de una hoja releyendo los bytes ya guardados. Las celdas se muestran como en Excel, con números en es-AR; de una fórmula se muestra su resultado guardado y los errores (`#REF!`) tal cual.
 - `IAnalizadorArchivoService` y `AnalizadorArchivoService`: según la extensión del nombre, derivan el archivo al lector de CSV (`.csv`) o al de Excel (cualquier otra), y devuelven el estado resultante. Permiten que Propio y Contraparte tengan formatos distintos.
-- `ICargaService` y `CargaService`: orquestan la subida. `subir` analiza el archivo y lo guarda en su lugar reemplazando lo anterior; si se rechaza, el lugar queda `Rechazado` con su motivo y el otro lugar no se toca. `registrarRechazo` guarda un rechazo ya detectado por la validación de entrada (M1 o M2).
+- `ICargaService` y `CargaService`: orquestan la carga. `subir` analiza el archivo y lo guarda en su lugar reemplazando lo anterior; si se rechaza, el lugar queda `Rechazado` con su motivo y el otro lugar no se toca. `registrarRechazo` guarda un rechazo ya detectado por la validación de entrada (M1 o M2). `elegirHoja` elige o cambia la hoja de un Excel sin volver a subirlo (se ignora si el lugar no tiene un Excel o la hoja no existe; si supera el máximo de filas queda rechazado con M4). `confirmar` confirma solo si Propio y Contraparte son válidos.
 
 **Pruebas (`src/test`)**
 - `FabricaArchivosPrueba`: genera por código los CSV, los Excel (`.xlsx` y `.xls`) con las hojas que pida el test, y los Excel cifrados, con datos ficticios.

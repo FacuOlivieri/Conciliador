@@ -21,8 +21,9 @@ import org.junit.jupiter.api.Test;
 class CargaServiceSubidaTest {
 
     private final CargaEnMemoriaRepository repositorio = new CargaEnMemoriaRepository();
+    private final LectorExcelService lectorExcel = new LectorExcelService();
     private final CargaService servicio = new CargaService(
-            new AnalizadorArchivoService(new LectorCsvService(), new LectorExcelService()), repositorio);
+            new AnalizadorArchivoService(new LectorCsvService(), lectorExcel), lectorExcel, repositorio);
 
     @Test
     void subirUnCsvValidoDejaElLugarValido() {

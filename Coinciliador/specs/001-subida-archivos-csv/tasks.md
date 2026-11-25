@@ -74,7 +74,7 @@ Si preferís partir la spec (por ejemplo, 001 CSV + interfaz y 002 Excel), se pu
 [x] **T14. `CargaService`: subir, rechazar y reemplazar.** RF-2, RF-13, RF-19
   - Hecho cuando: `CargaServiceSubidaTest` pasa con: rechazo en Contraparte → Propio válido se conserva; reemplazar un Excel ya elegido descarta la hoja; reemplazar un archivo válido por uno inválido deja el lugar en `Rechazado`.
 
-[ ] **T15. `CargaService`: elegir hoja y confirmar.** RF-16, RF-17, RF-22, RF-23
+[x] **T15. `CargaService`: elegir hoja y confirmar.** RF-16, RF-17, RF-22, RF-23
   - Hecho cuando: `CargaServiceHojaYConfirmacionTest` pasa con: elegir hoja en `PendienteDeHoja` → `Valido` sin volver a subir; cambiar a otra hoja actualiza el resumen; hoja inexistente se ignora; confirmar con un lugar no válido no confirma; confirmar con ambos válidos → confirmada.
 
 [ ] **T16. `PantallaCargaDto` y `PantallaCargaMapper`.** RF-18, RF-20, RF-21, RF-22, RF-24

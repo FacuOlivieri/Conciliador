@@ -75,6 +75,15 @@ public class LectorExcelService implements ILectorExcelService {
         }
     }
 
+    @Override
+    public Resumen resumirHoja(ArchivoCargado archivo, String hoja) {
+        try (Workbook libro = abrir(archivo.bytes())) {
+            return resumenDeHoja(archivo.nombre(), libro.getSheet(hoja), new DataFormatter(ES_AR));
+        } catch (IOException e) {
+            throw new ArchivoRechazadoException(MensajeCarga.M5);
+        }
+    }
+
     /** Hojas visibles con al menos una fila con datos. Una hoja de gráfico no tiene filas, así que queda afuera. */
     private List<String> hojasListables(Workbook libro, DataFormatter formato) {
         return IntStream.range(0, libro.getNumberOfSheets())

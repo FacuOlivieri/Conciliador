@@ -14,4 +14,13 @@ public interface ICargaService {
 
     /** Guarda en ese lugar un rechazo que ya detectó la validación de entrada (extensión o tamaño, M1 o M2). */
     void registrarRechazo(Lugar lugar, String nombre, MensajeCarga mensaje);
+
+    /**
+     * Elige o cambia la hoja de un Excel ya cargado, sin volver a subirlo (RF-16, RF-17). Se ignora si el lugar no
+     * tiene un Excel o la hoja no está entre las listables. Si la hoja supera el máximo de filas, el lugar queda rechazado.
+     */
+    void elegirHoja(Lugar lugar, String hoja);
+
+    /** Confirma la carga solo si Propio y Contraparte son válidos (RF-22, RF-23). El control también es del servidor. */
+    void confirmar();
 }

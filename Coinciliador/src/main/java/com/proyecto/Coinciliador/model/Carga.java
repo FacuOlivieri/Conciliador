@@ -26,6 +26,11 @@ public record Carga(TipoConciliacion tipo, EstadoLugar propio, EstadoLugar contr
                 : new Carga(tipo, propio, estado, false);
     }
 
+    /** Verdadero si Propio y Contraparte están ambos en estado válido (RF-22). */
+    public boolean ambosValidos() {
+        return propio instanceof EstadoLugar.Valido && contraparte instanceof EstadoLugar.Valido;
+    }
+
     public Carga confirmar() {
         return new Carga(tipo, propio, contraparte, true);
     }

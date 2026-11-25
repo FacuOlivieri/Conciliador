@@ -23,7 +23,7 @@ class AnalizadorArchivoServiceTest {
     private static final EstadoLugar.Valido DEL_LECTOR_EXCEL = valido("lector excel");
 
     private final AnalizadorArchivoService conLectoresFalsos =
-            new AnalizadorArchivoService((nombre, bytes) -> DEL_LECTOR_CSV, (nombre, bytes) -> DEL_LECTOR_EXCEL);
+            new AnalizadorArchivoService((nombre, bytes) -> DEL_LECTOR_CSV, lectorExcelFalso());
 
     private final AnalizadorArchivoService conLectoresReales =
             new AnalizadorArchivoService(new LectorCsvService(), new LectorExcelService());
@@ -68,6 +68,16 @@ class AnalizadorArchivoServiceTest {
                 () -> conLectoresReales.analizar("volumen.xlsx", bytes));
 
         assertThat(((EstadoLugar.Valido) estado).resumen().cantidadFilas()).isEqualTo(100_000);
+    }
+
+    // ILectorExcelService tiene dos métodos, así que ya no se puede escribir como lambda.
+    private static ILectorExcelService lectorExcelFalso() {
+        return new LectorExcelService() {
+            @Override
+            public EstadoLugar leer(String nombre, byte[] bytes) {
+                return DEL_LECTOR_EXCEL;
+            }
+        };
     }
 
     private static EstadoLugar.Valido valido(String marca) {

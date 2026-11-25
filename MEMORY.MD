@@ -2,11 +2,12 @@
 
 ## Estado actual (2026-11-25)
 - Spec activa: `Coinciliador/specs/001-subida-archivos-csv/` (spec y plan aprobados).
-- Tareas: 14 de 22 hechas (T1–T14). Bloque C (carga, web e interfaz) va por T15.
-- `./mvnw test` en verde (141 tests) al cerrar T14. T14 todavía sin commit.
-- Siguiente paso: commit de T14 y luego `/sdd-implement 001-subida-archivos-csv T15` (`CargaService`: elegir hoja y confirmar). A la sesión "Front Worktree" ya se le avisó que T14 terminó (retoma su T6).
+- Tareas: 15 de 22 hechas (T1–T15). Bloque C (carga, web e interfaz) va por T16.
+- `./mvnw test` en verde (151 tests) al cerrar T15. T15 todavía sin commit.
+- Siguiente paso: commit de T15 y luego `/sdd-implement 001-subida-archivos-csv T16` (`PantallaCargaDto` y `PantallaCargaMapper`, con `tituloTipo`).
 
 ## Decisiones
+- `elegirHoja` relee los bytes guardados con `ILectorExcelService.resumirHoja`; si la hoja supera 100.000 filas el lugar queda `Rechazado(M4)` (RF-7). `confirmar` usa `Carga.ambosValidos()`. `ILectorExcelService` ahora tiene dos métodos: en tests ya no se puede simular con una lambda (usar una subclase anónima de `LectorExcelService`).
 - `CargaService.subir` captura `ArchivoRechazadoException` y guarda `Rechazado(nombre, mensaje)`; `registrarRechazo` es para M1 y M2, que detecta Bean Validation antes de leer el archivo. `ICargaService` se completa en T15 con elegir hoja y confirmar.
 - `Carga` es un record inmutable (cada cambio devuelve una nueva); `CargaEnMemoriaRepository` guarda la referencia con métodos `synchronized`. `guardar` ya borra la confirmación, por eso no hay un `desconfirmar()` aparte (el pseudocódigo del plan lo menciona, pero sobra). `tipoActivo()` devuelve `Optional<TipoConciliacion>` (vacío hasta elegir tipo), igual que `TipoConciliacion.deSlug`.
 - `LectorExcelService` arma el `Resumen` con `DataFormatter(es-AR)` (columnas alineadas desde A). De una fórmula se muestra el resultado guardado (`getCachedFormulaResultType`), porque `DataFormatter` sin evaluador devuelve el texto de la fórmula. Hoja de gráfico: queda afuera porque no tiene filas, pero no hay test (POI 5.5.1 no permite crear una).
