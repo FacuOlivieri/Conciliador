@@ -7,7 +7,8 @@ public final class VistaPreviaHelper {
 
     private static final int MAXIMO_FILAS = 10;
     private static final int MAXIMO_COLUMNAS = 20;
-
+    private static final int MAXIMO_CARACTERES = 50;
+    
     private VistaPreviaHelper() {
     }
 
@@ -27,8 +28,10 @@ public final class VistaPreviaHelper {
     }
 
     private static String recortarCelda(String celda) {
-        // TODO(human): máximo 50 caracteres por celda; si se recorta, termina en "…",
-        // que cuenta dentro de los 50.
+        if (celda.length() > MAXIMO_CARACTERES) {
+            return celda.substring(0, MAXIMO_CARACTERES - 1) + "…";
+
+        }
         return celda;
     }
 }

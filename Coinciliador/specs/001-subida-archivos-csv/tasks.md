@@ -28,7 +28,7 @@ Si preferís partir la spec (por ejemplo, 001 CSV + interfaz y 002 Excel), se pu
 [x] **T2. `ExtensionHelper`.** RF-3, RF-4
   - Hecho cuando: `ExtensionHelperTest` pasa con `.CSV`/`.XLSX`/`.XLS` aceptados, `datos.csv.xlsx` → `xlsx`, sin extensión y nombre terminado en punto → vacío, `.ods`/`.xlsm`/`.xlsb`/`.tsv` no permitidos.
 
-[ ] **T3. `ContenidoHelper` y `VistaPreviaHelper`.** Definiciones (celda/fila con datos), RF-18
+[x] **T3. `ContenidoHelper` y `VistaPreviaHelper`.** Definiciones (celda/fila con datos), RF-18
   - Hecho cuando: `ContenidoHelperTest` pasa con celda de solo espacios → sin datos y fila con una celda con datos → con datos; `VistaPreviaHelperTest` pasa con 15 filas → 10, 25 columnas → 20 y celda de 60 caracteres → 50 caracteres terminados en "…", y con celdas cortas sin cambios.
 
 [ ] **T4. `AcumuladorFilas` y `HuellaHelper`.** RF-6, RF-7, RF-20
