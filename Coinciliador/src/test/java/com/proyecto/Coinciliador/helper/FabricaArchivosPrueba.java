@@ -1,15 +1,30 @@
 package com.proyecto.Coinciliador.helper;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
+import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.stream.IntStream;
+import org.apache.poi.hssf.record.crypto.Biff8EncryptionKey;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.poifs.crypt.EncryptionInfo;
+import org.apache.poi.poifs.crypt.EncryptionMode;
+import org.apache.poi.poifs.crypt.Encryptor;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /** Genera por código los archivos de prueba, con datos ficticios (RNF-6, D12). Nunca se guardan en disco. */
 public final class FabricaArchivosPrueba {
+
+    /** Texto de la celda A1 de la hoja "Hoja1" de los Excel mínimos. */
+    public static final String TEXTO_CELDA = "dato ficticio";
 
     private static final byte[] BOM_UTF8 = {(byte) 0xEF, (byte) 0xBB, (byte) 0xBF};
 
@@ -35,10 +50,45 @@ public final class FabricaArchivosPrueba {
         return conBom ? concatenar(BOM_UTF8, contenido) : contenido;
     }
 
-    /** Un .xlsx real y mínimo: sirve para probar un Excel renombrado a .csv. */
+    /** Un .xlsx real y mínimo: una hoja "Hoja1" con {@link #TEXTO_CELDA} en A1. */
     public static byte[] xlsxMinimo() {
-        try (XSSFWorkbook libro = new XSSFWorkbook(); ByteArrayOutputStream salida = new ByteArrayOutputStream()) {
-            libro.createSheet("Hoja1").createRow(0).createCell(0).setCellValue("dato ficticio");
+        return conUnaCelda(new XSSFWorkbook());
+    }
+
+    /** Un .xls real y mínimo (formato binario antiguo), con el mismo contenido que {@link #xlsxMinimo()}. */
+    public static byte[] xlsMinimo() {
+        return conUnaCelda(new HSSFWorkbook());
+    }
+
+    /** Un .xlsx cifrado con contraseña de apertura (cifrado agile, el de Excel moderno). */
+    public static byte[] xlsxCifrado(String clave) {
+        try (POIFSFileSystem sistema = new POIFSFileSystem(); ByteArrayOutputStream salida = new ByteArrayOutputStream()) {
+            Encryptor cifrador = new EncryptionInfo(EncryptionMode.agile).getEncryptor();
+            cifrador.confirmPassword(clave);
+            try (OPCPackage paquete = OPCPackage.open(new ByteArrayInputStream(xlsxMinimo()));
+                 OutputStream cifrado = cifrador.getDataStream(sistema)) {
+                paquete.save(cifrado);
+            }
+            sistema.writeFilesystem(salida);
+            return salida.toByteArray();
+        } catch (IOException | GeneralSecurityException | InvalidFormatException e) {
+            throw new IllegalStateException("No se pudo generar el .xlsx cifrado de prueba", e);
+        }
+    }
+
+    /** Un .xls cifrado con contraseña de apertura. La clave de POI es de hilo y se limpia siempre. */
+    public static byte[] xlsCifrado(String clave) {
+        Biff8EncryptionKey.setCurrentUserPassword(clave);
+        try {
+            return xlsMinimo();
+        } finally {
+            Biff8EncryptionKey.setCurrentUserPassword(null);
+        }
+    }
+
+    private static byte[] conUnaCelda(Workbook libro) {
+        try (libro; ByteArrayOutputStream salida = new ByteArrayOutputStream()) {
+            libro.createSheet("Hoja1").createRow(0).createCell(0).setCellValue(TEXTO_CELDA);
             libro.write(salida);
             return salida.toByteArray();
         } catch (IOException e) {
