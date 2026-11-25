@@ -90,5 +90,8 @@ Paquete base `com.proyecto.Coinciliador`.
 - `IAnalizadorArchivoService` y `AnalizadorArchivoService`: según la extensión del nombre, derivan el archivo al lector de CSV (`.csv`) o al de Excel (cualquier otra), y devuelven el estado resultante. Permiten que Propio y Contraparte tengan formatos distintos.
 - `ICargaService` y `CargaService`: orquestan la carga. `subir` analiza el archivo y lo guarda en su lugar reemplazando lo anterior; si se rechaza, el lugar queda `Rechazado` con su motivo y el otro lugar no se toca. `registrarRechazo` guarda un rechazo ya detectado por la validación de entrada (M1 o M2). `elegirHoja` elige o cambia la hoja de un Excel sin volver a subirlo (se ignora si el lugar no tiene un Excel o la hoja no existe; si supera el máximo de filas queda rechazado con M4). `confirmar` confirma solo si Propio y Contraparte son válidos.
 
+**Configuración (`application.properties`)**
+- Subida de archivos: hasta 30 MB por archivo y por petición (tope técnico; el límite de negocio de 10 MB lo aplica `@TamanoMaximo`) y umbral de disco de 31 MB, así los archivos se quedan en memoria y nunca se escriben en un temporal.
+
 **Pruebas (`src/test`)**
 - `FabricaArchivosPrueba`: genera por código los CSV, los Excel (`.xlsx` y `.xls`) con las hojas que pida el test, y los Excel cifrados, con datos ficticios.

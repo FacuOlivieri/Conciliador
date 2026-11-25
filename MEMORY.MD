@@ -2,11 +2,12 @@
 
 ## Estado actual (2026-11-25)
 - Spec activa: `Coinciliador/specs/001-subida-archivos-csv/` (spec y plan aprobados).
-- Tareas: 16 de 22 hechas (T1–T16). Bloque C (carga, web e interfaz) va por T17.
-- `./mvnw test` en verde (164 tests) al cerrar T16, ya commiteada.
-- Siguiente paso: `/sdd-implement 001-subida-archivos-csv T17` (configuración de multipart). Desde T16, `CLAUDE.md` pide commitear cada tarea al terminarla.
+- Tareas: 17 de 22 hechas (T1–T17). Bloque C (carga, web e interfaz) va por T18.
+- `./mvnw test` en verde (166 tests) al cerrar T17, ya commiteada.
+- Siguiente paso: `/sdd-implement 001-subida-archivos-csv T18` (`CargaController`: página y subida, con plantilla mínima). `CLAUDE.md` pide commitear cada tarea al terminarla.
 
 ## Decisiones
+- Multipart: 30 MB por archivo y petición, umbral de disco 31 MB (D4). **Pendiente para T19:** Tomcat solo descarta 2 MB de una petición rechazada (`server.tomcat.max-swallow-size`), así que con un archivo de más de 30 MB el navegador puede ver la conexión cortada en vez de M2; MockMvc no lo detecta, hay que probarlo en el navegador.
 - `PantallaCargaMapper` arma un `PantallaCargaDto` con dos `LugarVistaDto` (estado como enum `Estado`: VACIO, RECHAZADO, PENDIENTE_DE_HOJA, VALIDO). Todos los textos al usuario salen de `MensajeCarga`, incluidos los fragmentos de "qué falta" (M9–M11, en el catálogo de la spec): el mapper solo los completa, los une y pone la mayúscula (el usuario pidió tenerlos en un solo lugar). M7 usa la huella de cualquier lugar con archivo, incluso pendiente de hoja.
 - `elegirHoja` relee los bytes guardados con `ILectorExcelService.resumirHoja`; si la hoja supera 100.000 filas el lugar queda `Rechazado(M4)` (RF-7). `confirmar` usa `Carga.ambosValidos()`. `ILectorExcelService` ahora tiene dos métodos: en tests ya no se puede simular con una lambda (usar una subclase anónima de `LectorExcelService`).
 - `CargaService.subir` captura `ArchivoRechazadoException` y guarda `Rechazado(nombre, mensaje)`; `registrarRechazo` es para M1 y M2, que detecta Bean Validation antes de leer el archivo. `ICargaService` se completa en T15 con elegir hoja y confirmar.

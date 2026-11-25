@@ -81,7 +81,7 @@ Si preferís partir la spec (por ejemplo, 001 CSV + interfaz y 002 Excel), se pu
   - Cambio por la spec 002: `PantallaCargaDto` suma `tituloTipo` (nombre del tipo activo).
   - Hecho cuando: `PantallaCargaMapperTest` pasa con: Confirmar deshabilitado y texto de qué falta si un lugar no es válido; M7 cuando las huellas coinciden, aunque los nombres difieran; CSV + Excel ambos válidos → Confirmar habilitado; M8 solo si la carga está confirmada; `tituloTipo` es el nombre del tipo activo.
 
-[ ] **T17. Configuración de multipart.** RF-5, RNF-1
+[x] **T17. Configuración de multipart.** RF-5, RNF-1
   - Hecho cuando: `ConfiguracionMultipartTest` (contexto de Spring) comprueba `max-file-size` = 30 MB y `file-size-threshold` mayor que `max-file-size`.
 
 [ ] **T18. `CargaController`: página y subida, con plantilla mínima.** RF-1, RF-4, RF-5, RF-13, RF-19, RNF-2, RNF-4
