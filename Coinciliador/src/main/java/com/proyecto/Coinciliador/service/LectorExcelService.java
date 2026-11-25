@@ -13,9 +13,13 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.IntStream;
 import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.FormulaError;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.SheetVisibility;
@@ -30,9 +34,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class LectorExcelService implements ILectorExcelService {
 
+    // D10: el formato de los números no debe cambiar según la PC donde corra la aplicación.
+    private static final Locale ES_AR = Locale.forLanguageTag("es-AR");
+
     @Override
     public EstadoLugar leer(String nombre, byte[] bytes) {
-        DataFormatter formato = new DataFormatter(); // no es seguro entre hilos: uno por lectura
+        DataFormatter formato = new DataFormatter(ES_AR); // no es seguro entre hilos: uno por lectura
         try (Workbook libro = abrir(bytes)) {
             List<String> listables = hojasListables(libro, formato);
             if (listables.isEmpty()) {
@@ -99,8 +106,30 @@ public class LectorExcelService implements ILectorExcelService {
     private List<String> celdas(Row fila, DataFormatter formato) {
         List<String> celdas = new ArrayList<>();
         for (int columna = 0; columna < fila.getLastCellNum(); columna++) {
-            celdas.add(formato.formatCellValue(fila.getCell(columna)));
+            celdas.add(texto(fila.getCell(columna), formato));
         }
         return celdas;
+    }
+
+    private String texto(Cell celda, DataFormatter formato) {
+        if (celda == null) {
+            return "";
+        }
+        return celda.getCellType() == CellType.FORMULA ? resultadoGuardado(celda, formato) : formato.formatCellValue(celda);
+    }
+
+    /**
+     * D9: de una fórmula se muestra el resultado que el archivo trae guardado, no la fórmula ni un recálculo.
+     * Sin evaluador, DataFormatter devolvería el texto de la fórmula.
+     */
+    private String resultadoGuardado(Cell celda, DataFormatter formato) {
+        return switch (celda.getCachedFormulaResultType()) {
+            case NUMERIC -> formato.formatRawCellContents(celda.getNumericCellValue(),
+                    celda.getCellStyle().getDataFormat(), celda.getCellStyle().getDataFormatString());
+            case STRING -> celda.getStringCellValue();
+            case BOOLEAN -> String.valueOf(celda.getBooleanCellValue()).toUpperCase(Locale.ROOT);
+            case ERROR -> FormulaError.forInt(celda.getErrorCellValue()).getString();
+            default -> "";
+        };
     }
 }

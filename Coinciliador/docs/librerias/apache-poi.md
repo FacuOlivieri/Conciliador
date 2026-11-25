@@ -90,6 +90,8 @@ try (Workbook libro = new XSSFWorkbook();
 - **Filas o celdas `null`:** `sheet.getRow(i)` y `row.getCell(j)` devuelven `null` si nunca se escribieron. Con el `for` sobre la hoja o la fila solo se recorren las que existen.
 - **Contar filas:** `getLastRowNum()` es el índice de la última fila (base 0), no la cantidad, y cuenta filas que pueden estar vacías.
 - **Fechas:** en Excel una fecha es un número con formato de fecha. Sin `DateUtil.isCellDateFormatted` se lee como `45291.0`.
+- **Fórmulas con `DataFormatter`:** `formatCellValue(celda)` sin `FormulaEvaluator` devuelve el **texto de la fórmula** (`A1+B1`), no su resultado. Para mostrar el resultado guardado en el archivo hay que leer `getCachedFormulaResultType()` y formatear ese valor (`formatRawCellContents` para números). Verificado en la tarea T11.
+- **Locale de los números:** `new DataFormatter()` usa el locale de la PC. Para que `1234.5` salga siempre `1234,5`, crear `new DataFormatter(Locale.forLanguageTag("es-AR"))`. `DataFormatter` no es seguro entre hilos: uno por lectura.
 - **Archivo con contraseña:** `WorkbookFactory.create` lanza `EncryptedDocumentException`.
 - **Archivo que no es Excel:** `WorkbookFactory.create` lanza `IOException` porque no reconoce el formato.
 - **Extensión cambiada:** un `.xlsx` renombrado a `.xls` igual se abre, porque `WorkbookFactory` detecta por contenido. Relevante para una de las dudas abiertas de la spec 001.

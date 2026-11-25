@@ -57,7 +57,7 @@ Si preferís partir la spec (por ejemplo, 001 CSV + interfaz y 002 Excel), se pu
 [x] **T10. Hojas listables en `LectorExcelService`.** RF-6, RF-14, RF-15
   - Hecho cuando: `LectorExcelServiceHojasTest` pasa con: una hoja con datos → `Valido`; tres hojas con datos → `PendienteDeHoja` con sus tres nombres; hojas ocultas y vacías fuera de la lista; única hoja con datos oculta → M3.
 
-[ ] **T11. Resumen de hoja y formato de celdas.** RF-7, RF-18 (decisiones D9 y D10)
+[x] **T11. Resumen de hoja y formato de celdas.** RF-7, RF-18 (decisiones D9 y D10)
   - Hecho cuando: `LectorExcelServiceResumenTest` pasa con: una fórmula muestra su resultado guardado y no la fórmula; `#REF!` se muestra tal cual; celda combinada con valor en la primera; filas ocultas contadas; número `1234,5` formateado en `es-AR`; hoja de más de 100.000 filas con datos → M4.
 
 [ ] **T12. `AnalizadorArchivoService` y prueba de volumen.** RF-3, RF-21 (riesgo D8)

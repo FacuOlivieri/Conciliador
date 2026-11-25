@@ -105,6 +105,15 @@ public final class FabricaArchivosPrueba {
         return hoja;
     }
 
+    /** Agrega una hoja visible con esa cantidad de filas, cada una con un dato en A. */
+    public static Sheet hojaConFilas(Workbook libro, String nombre, int cantidad) {
+        Sheet hoja = libro.createSheet(nombre);
+        for (int fila = 0; fila < cantidad; fila++) {
+            hoja.createRow(fila).createCell(0).setCellValue(TEXTO_CELDA);
+        }
+        return hoja;
+    }
+
     /** Agrega una hoja visible sin ninguna fila. */
     public static Sheet hojaVacia(Workbook libro, String nombre) {
         return libro.createSheet(nombre);

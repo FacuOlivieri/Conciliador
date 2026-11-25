@@ -2,12 +2,12 @@
 
 ## Estado actual (2026-11-25)
 - Spec activa: `Coinciliador/specs/001-subida-archivos-csv/` (spec y plan aprobados).
-- Tareas: 10 de 22 hechas (T1–T10). Bloque B (lectura de archivos) va por T11.
-- `./mvnw test` en verde (101 tests) al cerrar T10. T10 todavía sin commit.
-- Siguiente paso: commit de T10 y luego `/sdd-implement 001-subida-archivos-csv T11` (resumen de hoja y formato de celdas).
+- Tareas: 11 de 22 hechas (T1–T11). Bloque B (lectura de archivos) va por T12, la última del bloque.
+- `./mvnw test` en verde (107 tests) al cerrar T11. T11 todavía sin commit.
+- Siguiente paso: commit de T11 y luego `/sdd-implement 001-subida-archivos-csv T12` (`AnalizadorArchivoService` y prueba de volumen; riesgo D8).
 
 ## Decisiones
-- T10 ya arma el `Resumen` de la hoja con `DataFormatter` (columnas alineadas desde A). T11 solo afina: locale `es-AR`, fórmulas, `#REF!`, combinadas, filas ocultas y M4. Hoja de gráfico: queda afuera porque no tiene filas, pero no hay test (POI 5.5.1 no permite crear una).
+- `LectorExcelService` arma el `Resumen` con `DataFormatter(es-AR)` (columnas alineadas desde A). De una fórmula se muestra el resultado guardado (`getCachedFormulaResultType`), porque `DataFormatter` sin evaluador devuelve el texto de la fórmula. Hoja de gráfico: queda afuera porque no tiene filas, pero no hay test (POI 5.5.1 no permite crear una).
 - `LectorExcelService.abrir(byte[])` es de paquete y devuelve un `Workbook` POI que quien lo llama debe cerrar; la interfaz `ILectorExcelService` solo expone `leer`, sin tipos de POI. M6 sale de `EncryptedDocumentException`; cualquier otra falla de POI al abrir es M5.
 - Los lectores lanzan `ArchivoRechazadoException` y no devuelven el rechazo: `CargaService` (T14) lo atrapa y arma el estado `Rechazado`. `LectorCsvService.leer` devuelve `EstadoLugar.Valido`. No se propaga la causa de la excepción de Commons CSV (puede traer datos del archivo, RNF-3).
 - `FabricaArchivosPrueba` (en `src/test/.../helper/`) tiene `csv(...)`, `filasFicticias(n)`, `xlsx(armado)`, `xls(armado)`, `hojaConDatos`, `hojaVacia`, `xlsxMinimo()`, `xlsMinimo()` y los cifrados; T11 le suma fórmulas, combinadas y filas ocultas.
@@ -19,6 +19,8 @@
 - El recorte de celdas usa "…" (un solo carácter, U+2026), no tres puntos: así la celda mide exactamente 50.
 
 ## Errores a evitar
+- `DataFormatter.formatCellValue` sin `FormulaEvaluator` devuelve el texto de la fórmula, no su resultado: para fórmulas leer el valor guardado.
+- Con 100.001 filas, `LectorExcelServiceResumenTest` tarda ~7 s (crear y leer el libro en memoria): dato a mano para el riesgo D8 de T12 (criterio: menos de 10 s).
 - `String` es inmutable: `substring` devuelve un texto nuevo, hay que usar el `return`.
 - Revisar que el test pase con `./mvnw test` antes de marcar una tarea `[x]`.
 
