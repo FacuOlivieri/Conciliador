@@ -2,9 +2,9 @@
 
 ## Estado actual (2026-11-25)
 - Spec activa: `Coinciliador/specs/001-subida-archivos-csv/` (spec y plan aprobados).
-- Tareas: 19 de 22 hechas (T1–T19). Faltan T20 (logs), T21 (diseño) y T22 (cierre).
-- `./mvnw test` en verde (186 tests) al cerrar T19, ya commiteada.
-- Siguiente paso: `/sdd-implement 001-subida-archivos-csv T20` (nada sensible en los logs). `CLAUDE.md` pide commitear cada tarea al terminarla.
+- Tareas: 20 de 22 hechas (T1–T20). Faltan T21 (diseño) y T22 (cierre).
+- `./mvnw test` en verde (191 tests) al cerrar T20, ya commiteada.
+- Siguiente paso: T21 (diseño) la hace la sesión "Front Worktree" (decisión del usuario). Cuando esté en main: correr `./mvnw test`, verificar en el navegador, marcar T21 y hacer T22 (cierre) y `/sdd-validate`.
 
 ## Decisiones
 - `CargaController` lee la carga con `ICargaService.cargaActual()` (no toca el repositorio) y la plantilla usa `fragmentos/tarjeta-lugar.html`. En `main` todavía no existe `GET /` (lo trae la 002): hasta mergearla, `/carga` redirige a una página 404 y la pantalla no se puede ver en el navegador. Sin Spring Security no hay protección CSRF.
@@ -25,6 +25,7 @@
 - El recorte de celdas usa "…" (un solo carácter, U+2026), no tres puntos: así la celda mide exactamente 50.
 
 ## Errores a evitar
+- Toda lectura de un Excel pasa por `LectorExcelService.conLibro`: POI puede fallar recién al leer una celda y eso debe ser M5. Sin esa captura salía un error 500 y la excepción quedaba en los registros (RNF-3).
 - `ArchivoCargado` lleva un `byte[]`: dos records con arreglos iguales no son `equals`. En los tests guardar y comparar la misma instancia, no crear otra con el mismo contenido.
 - D8 revisado en T12: un xlsx de 100.000 filas x 3 columnas (2 MB) tardó de 6 a más de 10 s con la API normal de POI (abrir el libro solo ~5 s; sin problemas de memoria). Decisión del usuario: mantener la API normal y subir el límite del test a 30 s. Un xlsx de 10 MB (el máximo) puede tardar bastante más: si molesta en el uso real, pasar a lectura en streaming. Crear el libro en el test tarda 16-21 s.
 - `DataFormatter.formatCellValue` sin `FormulaEvaluator` devuelve el texto de la fórmula, no su resultado: para fórmulas leer el valor guardado.
