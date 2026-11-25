@@ -54,7 +54,7 @@ Dependencias: T13 (`Carga` con `tipo` y `reiniciar`), T14 y T18 (`CargaControlle
   - Agrega `POST /conciliacion/{slug}`, `GET /conciliacion/{slug}/confirmar` y `POST /conciliacion/{slug}/descartar`, la plantilla `confirmar-cambio.html` y el mensaje P1 por redirección con atributo *flash*.
   - Hecho cuando: `InicioControllerEleccionTest` (MockMvc) pasa con: `POST /conciliacion/iva` sin carga → redirige a `/carga`; slug inexistente → redirige a `/`, muestra P1 y no toca la carga; con un archivo válido cargado, otro tipo → redirige a la confirmación, que muestra D1 y un enlace "Cancelar" con `href="/"`; `POST …/descartar` → redirige a `/carga` con ambos lugares vacíos; abrir la confirmación sin que haga falta → redirige a `/carga` o a `/` y no muestra D1; las páginas nuevas no tienen recursos externos.
 
-[ ] **T8. Integración con la pantalla de carga.** RF-5, RF-6, RF-10
+[x] **T8. Integración con la pantalla de carga.** RF-5, RF-6, RF-10
   - Solo pruebas sobre lo que aplicó la sesión de la 001. Si algo falla, no se corrige acá: se avisa a esa sesión.
   - Hecho cuando: `CargaControllerTipoTest` (MockMvc) pasa con: `GET /carga` con tipo activo muestra el nombre del tipo como título y un enlace `href="/"`; `GET /carga` sin tipo activo → redirige a `/` sin mensaje; subir un archivo, volver al inicio y elegir el mismo tipo → la carga conserva el archivo.
 
