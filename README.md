@@ -54,6 +54,7 @@ Paquete base `com.proyecto.Coinciliador`.
 - `ArchivoCargado`: archivo aceptado con sus bytes, huella y datos para releerlo (hojas o separador y codificación).
 - `Resumen`: lo que ve el contador de un archivo válido: nombre, hoja, cantidad de filas y vista previa.
 - `EstadoLugar`: interfaz sellada con los estados de un lugar: `Vacio`, `Rechazado`, `PendienteDeHoja`, `Valido`.
+- `Carga`: la única carga de la aplicación: estado de Propio y Contraparte, si fue confirmada y su tipo de conciliación (nulo hasta que se elige). Es inmutable: cada cambio devuelve una carga nueva; cambiar un lugar borra la confirmación y `vacia(tipo)` la deja sin archivos ni rechazos.
 
 **`helper/`**
 - `ExtensionHelper`: extensión de un nombre de archivo en minúsculas y si es una de las permitidas (`csv`, `xlsx`, `xls`).
@@ -63,6 +64,9 @@ Paquete base `com.proyecto.Coinciliador`.
 - `HuellaHelper`: calcula el SHA-256 de los bytes de un archivo en hexadecimal, para detectar que Propio y Contraparte son el mismo.
 - `CodificacionHelper`: decide si unos bytes son texto (sin 0x00), detecta si el CSV está en UTF-8 o Windows-1252 y quita el BOM inicial.
 - `SeparadorHelper`: detecta (desde una lista de líneas o desde el texto entero) si un CSV usa `;`, `,` o tabulación mirando las primeras 20 líneas con datos (ignora lo que está entre comillas; gana el separador con cuenta constante por línea y, en empate, `;`).
+
+**`repository/`**
+- `ICargaRepository` y `CargaEnMemoriaRepository`: guardan la carga en memoria, sin disco, compartida por todas las pestañas. Guardar un lugar no toca el otro y borra la confirmación; `reiniciar(tipo)` descarta todo y deja ambos lugares vacíos con ese tipo.
 
 **`exception/`**
 - `ArchivoRechazadoException`: rechazo de un archivo con su `MensajeCarga`; no lleva nombre ni contenido.

@@ -67,7 +67,7 @@ Si preferís partir la spec (por ejemplo, 001 CSV + interfaz y 002 Excel), se pu
 
 ## Bloque C — Carga, web e interfaz
 
-[ ] **T13. `Carga` y `CargaEnMemoriaRepository`.** RF-2, RF-24, RNF-1
+[x] **T13. `Carga` y `CargaEnMemoriaRepository`.** RF-2, RF-24, RNF-1
   - Cambio por la spec 002: `Carga` suma el campo `tipo` (`TipoConciliacion`, nulo hasta que se elige uno) y `reiniciar(tipo)`; `ICargaRepository` suma `tipoActivo()` y `reiniciar(tipo)`. El enum lo crea la spec 002 (sesión del front): si todavía no está en esta rama, pedirlo antes de empezar.
   - Hecho cuando: `CargaEnMemoriaRepositoryTest` pasa con: guardar Propio no modifica Contraparte; cualquier guardado borra la confirmación; dos lecturas devuelven la misma carga; `tipoActivo()` empieza en nada; `reiniciar(tipo)` deja ambos lugares en `Vacio` (también si uno estaba `Rechazado`), sin confirmación y con ese tipo.
 
