@@ -97,11 +97,12 @@ Si preferís partir la spec (por ejemplo, 001 CSV + interfaz y 002 Excel), se pu
 [x] **T20. Nada sensible en los logs.** RNF-3
   - Hecho cuando: `LogsSinDatosTest` (con `OutputCaptureExtension`) sube un archivo con nombre y contenido marcados y comprueba que ninguno de los dos aparece en la salida, tanto en una subida válida como en una rechazada.
 
-[ ] **T21. Diseño visual con `/impeccable`.** RF-18 (presentación), RNF-5
+[x] **T21. Diseño visual con `/impeccable`.** RF-18 (presentación), RNF-5
   - Responsable: la sesión del front (rama de la spec 002), decidido el 2026-11-25. La marca `[x]` la sesión de la 001 cuando el diseño esté en `main` y verificado.
+  - Verificado el 2026-11-25 en `main` (be26808): 246 tests en verde y revisión en el navegador de los 4 estados, vista previa recortada, M7, M8, ancho angosto y solo pedidos a la propia aplicación (RNF-5).
   - Tarea visual: se verifica en el navegador, no con test (constitución, regla 4).
   - Cambio por la spec 002: conviene hacerla junto con las tareas visuales de la 002, con un solo `/impeccable init`, para que la carga y la página inicial no terminen con estilos distintos.
   - Hecho cuando: en el navegador se ven el título del tipo y el enlace "Volver al inicio", las dos tarjetas, los 4 estados, la tabla de vista previa con recortes, M7 y M8; la página funciona con la red desactivada (sin CDN ni fuentes externas); los tests de T18–T19 siguen en verde.
 
-[ ] **T22. Cierre: README y verificación completa.**
+[x] **T22. Cierre: README y verificación completa.**
   - Hecho cuando: la sección "Módulos" del `README.md` tiene una línea por clase creada; `./mvnw test` pasa completo; cada RF de la matriz del plan tiene su test o verificación marcada. Después de esto la spec pasa a validación (`/sdd-validate`).

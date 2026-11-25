@@ -76,6 +76,9 @@ Paquete base `com.proyecto.Coinciliador`.
 - `EleccionTipoForm`: el tipo elegido tal como llega en la URL (slug), validado con `@TipoConciliacionValido`.
 - `TipoConciliacionValido` y `TipoConciliacionValidoValidator`: restricción de Bean Validation; el slug debe ser el de un tipo existente, si no el mensaje es el código P1.
 
+**Raíz**
+- `CoinciliadorApplication`: punto de entrada; arranca la aplicación Spring Boot.
+
 **`model/`**
 - `Lugar`: los dos lugares de carga, Propio y Contraparte, con su etiqueta para la vista.
 - `FormatoArchivo`: formato real del archivo (CSV o EXCEL; `.xls` y `.xlsx` son ambos EXCEL).

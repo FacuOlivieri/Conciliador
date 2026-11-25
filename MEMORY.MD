@@ -2,12 +2,12 @@
 
 ## Estado actual (2026-11-25)
 - Spec activa: `Coinciliador/specs/001-subida-archivos-csv/` (spec y plan aprobados).
-- Tareas: 20 de 22 hechas (T1–T20). Faltan T21 (diseño) y T22 (cierre).
-- `./mvnw test` en verde (191 tests) al cerrar T20, ya commiteada.
-- Siguiente paso: T21 (diseño) la hace la sesión "Front Worktree" (decisión del usuario). Cuando esté en main: correr `./mvnw test`, verificar en el navegador, marcar T21 y hacer T22 (cierre) y `/sdd-validate`.
+- Tareas: 22 de 22 hechas. El diseño (T21) lo hizo la sesión "Front Worktree" y está en main, junto con toda la spec 002 (be26808).
+- `./mvnw test` en verde (246 tests, specs 001 y 002) con T22 cerrada.
+- Siguiente paso: `/sdd-validate 001-subida-archivos-csv`. La spec sigue en estado "aprobada" hasta validarla. Para probar la app: `--server.address=127.0.0.1 --spring.docker.compose.enabled=false`.
 
 ## Decisiones
-- `CargaController` lee la carga con `ICargaService.cargaActual()` (no toca el repositorio) y la plantilla usa `fragmentos/tarjeta-lugar.html`. En `main` todavía no existe `GET /` (lo trae la 002): hasta mergearla, `/carga` redirige a una página 404 y la pantalla no se puede ver en el navegador. Sin Spring Security no hay protección CSRF.
+- `CargaController` lee la carga con `ICargaService.cargaActual()` (no toca el repositorio) y la plantilla usa `fragmentos/tarjeta-lugar.html`. Sin Spring Security no hay protección CSRF.
 - Multipart: 30 MB por archivo y petición, umbral de disco 31 MB (D4). Además `server.tomcat.max-swallow-size=-1`: sin eso Tomcat corta la conexión con un archivo de más de 30 MB. `ArchivoMuyGrandeTest` lo prueba con un socket que envía todo antes de leer, como un navegador (el `HttpClient` de Java no detectaba el corte; MockMvc tampoco).
 - `PantallaCargaMapper` arma un `PantallaCargaDto` con dos `LugarVistaDto` (estado como enum `Estado`: VACIO, RECHAZADO, PENDIENTE_DE_HOJA, VALIDO). Todos los textos al usuario salen de `MensajeCarga`, incluidos los fragmentos de "qué falta" (M9–M11, en el catálogo de la spec): el mapper solo los completa, los une y pone la mayúscula (el usuario pidió tenerlos en un solo lugar). M7 usa la huella de cualquier lugar con archivo, incluso pendiente de hoja.
 - `elegirHoja` relee los bytes guardados con `ILectorExcelService.resumirHoja`; si la hoja supera 100.000 filas el lugar queda `Rechazado(M4)` (RF-7). `confirmar` usa `Carga.ambosValidos()`. `ILectorExcelService` ahora tiene dos métodos: en tests ya no se puede simular con una lambda (usar una subclase anónima de `LectorExcelService`).
@@ -33,7 +33,7 @@
 - Revisar que el test pase con `./mvnw test` antes de marcar una tarea `[x]`.
 
 ## Spec 002 (sesión "Front Worktree")
-- Sus ajustes a la 001 ya están aplicados y `TipoConciliacion` está en main. Se le avisó que T13 y T14 terminaron; `tipoActivo()` devuelve `Optional`. La rama temporal `tipo-conciliacion-para-001` se puede borrar.
+- Mergeada en main. La rama temporal `tipo-conciliacion-para-001` se puede borrar. El texto del botón de archivo ("Choose File") es nativo del navegador y sigue su idioma.
 
 ## Pendientes a futuro (no implementar sin spec y aprobación)
 - **Spring Security** (pedido del usuario, pensando en escalar): hoy no hay protección CSRF ni login, y cualquiera que llegue al puerto ve la carga. Es una dependencia nueva: requiere aprobación (constitución, regla 1), spec propia y su tutorial en `docs/librerias/`. Mientras tanto la app escucha en todas las interfaces de red; fijar `server.address=127.0.0.1` la limitaría a la propia PC.
