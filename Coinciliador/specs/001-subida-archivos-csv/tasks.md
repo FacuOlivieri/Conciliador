@@ -48,7 +48,7 @@ Si preferís partir la spec (por ejemplo, 001 CSV + interfaz y 002 Excel), se pu
 
 ## Bloque B — Lectura de archivos
 
-[ ] **T8. Fábrica de CSV de prueba y `LectorCsvService`.** RF-6, RF-7, RF-8, RF-12, RF-18
+[x] **T8. Fábrica de CSV de prueba y `LectorCsvService`.** RF-6, RF-7, RF-8, RF-12, RF-18
   - Hecho cuando: `LectorCsvServiceTest` pasa con: archivo de 0 bytes, solo BOM y solo `;;;` → M3; bytes binarios y un `.xlsx` renombrado a `.csv` → M5; comillas sin cerrar → M5; filas de distinto largo aceptadas; CSV válido → `Valido` con cantidad de filas y vista previa correctas.
 
 [ ] **T9. Fábrica de Excel de prueba y apertura en `LectorExcelService`.** RF-6, RF-9, RF-10, RF-11

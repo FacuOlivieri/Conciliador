@@ -15,6 +15,11 @@ public final class SeparadorHelper {
     private SeparadorHelper() {
     }
 
+    /** Igual que {@link #detectar(List)}, partiendo el texto en líneas solo hasta juntar la muestra. */
+    public static char detectar(String texto) {
+        return detectar(texto.lines().filter(ContenidoHelper::celdaConDatos).limit(LINEAS_A_MIRAR).toList());
+    }
+
     /** Gana el separador que más líneas tienen con la misma cantidad; empate → ';'. */
     public static char detectar(List<String> lineas) {
         List<String> muestra = lineas.stream()

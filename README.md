@@ -62,7 +62,7 @@ Paquete base `com.proyecto.Coinciliador`.
 - `AcumuladorFilas`: recibe las filas de a una; cuenta las que tienen datos, guarda las 10 primeras para la vista previa y rechaza con M4 al pasar las 100.000 filas.
 - `HuellaHelper`: calcula el SHA-256 de los bytes de un archivo en hexadecimal, para detectar que Propio y Contraparte son el mismo.
 - `CodificacionHelper`: decide si unos bytes son texto (sin 0x00), detecta si el CSV está en UTF-8 o Windows-1252 y quita el BOM inicial.
-- `SeparadorHelper`: detecta si un CSV usa `;`, `,` o tabulación mirando las primeras 20 líneas con datos (ignora lo que está entre comillas; gana el separador con cuenta constante por línea y, en empate, `;`).
+- `SeparadorHelper`: detecta (desde una lista de líneas o desde el texto entero) si un CSV usa `;`, `,` o tabulación mirando las primeras 20 líneas con datos (ignora lo que está entre comillas; gana el separador con cuenta constante por línea y, en empate, `;`).
 
 **`exception/`**
 - `ArchivoRechazadoException`: rechazo de un archivo con su `MensajeCarga`; no lleva nombre ni contenido.
@@ -74,3 +74,9 @@ Paquete base `com.proyecto.Coinciliador`.
 **`utils/validacion/`**
 - `ExtensionPermitida` y `ExtensionPermitidaValidator`: restricción de Bean Validation, el archivo debe ser `.csv`, `.xlsx` o `.xls` (mensaje M1; sin archivo también falla).
 - `TamanoMaximo` y `TamanoMaximoValidator`: restricción de Bean Validation, el archivo no puede superar 10.485.760 bytes (mensaje M2).
+
+**`service/`**
+- `ILectorCsvService` y `LectorCsvService`: leen un CSV. Rechazan con M3 (vacío), M5 (no es texto o comillas sin cerrar) o M4 (más de 100.000 filas con datos). Si es válido, detectan codificación y separador, cuentan las filas con datos y arman la vista previa.
+
+**Pruebas (`src/test`)**
+- `FabricaArchivosPrueba`: genera por código los CSV y el `.xlsx` mínimo de los tests, con datos ficticios.
