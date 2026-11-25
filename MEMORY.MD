@@ -4,7 +4,7 @@
 - Spec activa: `Coinciliador/specs/001-subida-archivos-csv/` (spec y plan aprobados).
 - Tareas: 20 de 22 hechas (T1–T20). Faltan T21 (diseño) y T22 (cierre).
 - `./mvnw test` en verde (191 tests) al cerrar T20, ya commiteada.
-- Siguiente paso: `/sdd-implement 001-subida-archivos-csv T21` (diseño con `/impeccable`). Antes, coordinar con la sesión "Front Worktree": un solo `/impeccable init` para las specs 001 y 002. `CLAUDE.md` pide commitear cada tarea al terminarla.
+- Siguiente paso: T21 (diseño) la hace la sesión "Front Worktree" (decisión del usuario). Cuando esté en main: correr `./mvnw test`, verificar en el navegador, marcar T21 y hacer T22 (cierre) y `/sdd-validate`.
 
 ## Decisiones
 - `CargaController` lee la carga con `ICargaService.cargaActual()` (no toca el repositorio) y la plantilla usa `fragmentos/tarjeta-lugar.html`. En `main` todavía no existe `GET /` (lo trae la 002): hasta mergearla, `/carga` redirige a una página 404 y la pantalla no se puede ver en el navegador. Sin Spring Security no hay protección CSRF.
