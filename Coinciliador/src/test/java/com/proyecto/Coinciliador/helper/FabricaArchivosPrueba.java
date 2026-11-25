@@ -18,6 +18,7 @@ import org.apache.poi.poifs.crypt.EncryptionInfo;
 import org.apache.poi.poifs.crypt.EncryptionMode;
 import org.apache.poi.poifs.crypt.Encryptor;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -110,6 +111,18 @@ public final class FabricaArchivosPrueba {
         Sheet hoja = libro.createSheet(nombre);
         for (int fila = 0; fila < cantidad; fila++) {
             hoja.createRow(fila).createCell(0).setCellValue(TEXTO_CELDA);
+        }
+        return hoja;
+    }
+
+    /** Agrega una hoja de volumen: filas de tres columnas (comprobante, proveedor e importe numérico) distintas entre sí. */
+    public static Sheet hojaDeVolumen(Workbook libro, String nombre, int cantidad) {
+        Sheet hoja = libro.createSheet(nombre);
+        for (int fila = 0; fila < cantidad; fila++) {
+            Row nueva = hoja.createRow(fila);
+            nueva.createCell(0).setCellValue("Comprobante " + fila);
+            nueva.createCell(1).setCellValue("Proveedor " + (fila % 500));
+            nueva.createCell(2).setCellValue(fila * 1.25);
         }
         return hoja;
     }

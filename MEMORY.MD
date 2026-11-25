@@ -2,9 +2,9 @@
 
 ## Estado actual (2026-11-25)
 - Spec activa: `Coinciliador/specs/001-subida-archivos-csv/` (spec y plan aprobados).
-- Tareas: 11 de 22 hechas (T1–T11). Bloque B (lectura de archivos) va por T12, la última del bloque.
-- `./mvnw test` en verde (107 tests) al cerrar T11. T11 todavía sin commit.
-- Siguiente paso: commit de T11 y luego `/sdd-implement 001-subida-archivos-csv T12` (`AnalizadorArchivoService` y prueba de volumen; riesgo D8).
+- Tareas: 12 de 22 hechas (T1–T12). Bloque B (lectura de archivos) completo; sigue el bloque C desde T13.
+- `./mvnw test` en verde (112 tests) al cerrar T12. T12 todavía sin commit.
+- Siguiente paso: commit de T12 y luego, antes de T13, aplicar con `/sdd-change` los 4 ajustes de la spec 002 (ver sección de pendientes de abajo). Después `/sdd-implement 001-subida-archivos-csv T13`.
 
 ## Decisiones
 - `LectorExcelService` arma el `Resumen` con `DataFormatter(es-AR)` (columnas alineadas desde A). De una fórmula se muestra el resultado guardado (`getCachedFormulaResultType`), porque `DataFormatter` sin evaluador devuelve el texto de la fórmula. Hoja de gráfico: queda afuera porque no tiene filas, pero no hay test (POI 5.5.1 no permite crear una).
@@ -19,6 +19,7 @@
 - El recorte de celdas usa "…" (un solo carácter, U+2026), no tres puntos: así la celda mide exactamente 50.
 
 ## Errores a evitar
+- D8 revisado en T12: un xlsx de 100.000 filas x 3 columnas (2 MB) tardó de 6 a más de 10 s con la API normal de POI (abrir el libro solo ~5 s; sin problemas de memoria). Decisión del usuario: mantener la API normal y subir el límite del test a 30 s. Un xlsx de 10 MB (el máximo) puede tardar bastante más: si molesta en el uso real, pasar a lectura en streaming. Crear el libro en el test tarda 16-21 s.
 - `DataFormatter.formatCellValue` sin `FormulaEvaluator` devuelve el texto de la fórmula, no su resultado: para fórmulas leer el valor guardado.
 - Con 100.001 filas, `LectorExcelServiceResumenTest` tarda ~7 s (crear y leer el libro en memoria): dato a mano para el riesgo D8 de T12 (criterio: menos de 10 s).
 - `String` es inmutable: `substring` devuelve un texto nuevo, hay que usar el `return`.
