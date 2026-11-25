@@ -17,3 +17,6 @@ ${project.build.directory}/
 
 ### Configuración sensible ###
 .env
+
+### Apuntes personales de estudio (no van al repo) ###
+Coinciliador/docs/apuntes/

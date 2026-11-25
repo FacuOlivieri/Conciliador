@@ -40,7 +40,7 @@ Si preferís partir la spec (por ejemplo, 001 CSV + interfaz y 002 Excel), se pu
 [x] **T6. `SeparadorHelper`.** RF-12
   - Hecho cuando: `SeparadorHelperTest` pasa con líneas separadas por `;`, `,` y tabulación, un `;` dentro de comillas que no cuenta, y empate → `;`.
 
-[ ] **T7. Validaciones con Bean Validation y formularios.** RF-3, RF-4, RF-5, regla 5
+[x] **T7. Validaciones con Bean Validation y formularios.** RF-3, RF-4, RF-5, regla 5
   - Crea `@ExtensionPermitida`, `@TamanoMaximo` (con sus validadores), `SubidaArchivoForm` y `ElegirHojaForm`.
   - Hecho cuando: `ValidacionesArchivoTest` pasa con 10.485.760 bytes válido, 10.485.761 → M2, `.ods` → M1, `.csv` válido, y hoja en blanco inválida.
 

@@ -66,3 +66,11 @@ Paquete base `com.proyecto.Coinciliador`.
 
 **`exception/`**
 - `ArchivoRechazadoException`: rechazo de un archivo con su `MensajeCarga`; no lleva nombre ni contenido.
+
+**`dto/`**
+- `SubidaArchivoForm`: formulario de subida; el archivo se valida con `@ExtensionPermitida` y `@TamanoMaximo`.
+- `ElegirHojaForm`: nombre de la hoja elegida de un Excel (`@NotBlank`).
+
+**`utils/validacion/`**
+- `ExtensionPermitida` y `ExtensionPermitidaValidator`: restricción de Bean Validation, el archivo debe ser `.csv`, `.xlsx` o `.xls` (mensaje M1; sin archivo también falla).
+- `TamanoMaximo` y `TamanoMaximoValidator`: restricción de Bean Validation, el archivo no puede superar 10.485.760 bytes (mensaje M2).
