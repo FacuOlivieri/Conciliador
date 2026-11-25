@@ -56,7 +56,11 @@ Paquete base `com.proyecto.Coinciliador`.
 - `CargaEnCursoHelper`: dice si hay una carga en curso: algún lugar con archivo aceptado (aunque falte la hoja) o carga confirmada; vacío y rechazado no cuentan.
 - `EleccionTipoHelper`: decide al elegir un tipo: pide confirmación solo si hay carga en curso de otro tipo; si no, abre la carga.
 
-**`dto/` y `utils/validacion/` (spec 002, página inicial)**
+**`dto/`, `mapper/` y `utils/validacion/` (spec 002, página inicial)**
+- `TipoVistaDto`: una tarjeta de la página inicial (slug, nombre y frase de ayuda de un tipo).
+- `InicioDto`: las cuatro tarjetas y, si hay que avisar algo, el texto del mensaje (null si no).
+- `ConfirmacionCambioDto`: lo que muestra la pantalla de confirmación: tipo activo, tipo elegido (con su slug) y el texto D1.
+- `InicioMapper`: arma los DTOs anteriores desde `TipoConciliacion` y `MensajeInicio`; las plantillas no calculan nada.
 - `EleccionTipoForm`: el tipo elegido tal como llega en la URL (slug), validado con `@TipoConciliacionValido`.
 - `TipoConciliacionValido` y `TipoConciliacionValidoValidator`: restricción de Bean Validation; el slug debe ser el de un tipo existente, si no el mensaje es el código P1.
 

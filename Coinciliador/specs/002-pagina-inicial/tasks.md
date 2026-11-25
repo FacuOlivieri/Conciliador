@@ -32,7 +32,7 @@ El desglose dio **10 tareas**, dentro del máximo, así que no hace falta dividi
   - Crea la restricción, su validador y el formulario que recibe el *slug*.
   - Hecho cuando: `TipoConciliacionValidoValidatorTest` pasa con `iva` y `IVA` válidos, y con `monotributo`, en blanco y nulo inválidos con el mensaje P1.
 
-[ ] **T4. DTOs e `InicioMapper`.** RF-2, RF-3, RF-7
+[x] **T4. DTOs e `InicioMapper`.** RF-2, RF-3, RF-7
   - Crea `InicioDto`, `TipoVistaDto`, `ConfirmacionCambioDto` e `InicioMapper`.
   - Hecho cuando: `InicioMapperTest` pasa con 4 tarjetas en orden, cada una con slug, nombre y ayuda correctos; mensaje P1 presente solo si se lo pide; y `ConfirmacionCambioDto` con el nombre del tipo activo, el del elegido y el texto D1.
 
