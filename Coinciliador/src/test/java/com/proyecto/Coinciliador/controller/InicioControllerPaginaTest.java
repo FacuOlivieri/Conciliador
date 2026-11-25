@@ -11,10 +11,12 @@ import java.util.regex.Pattern;
 import com.proyecto.Coinciliador.enums.MensajeInicio;
 import com.proyecto.Coinciliador.enums.TipoConciliacion;
 import com.proyecto.Coinciliador.mapper.InicioMapper;
+import com.proyecto.Coinciliador.service.ICargaService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 // Cubre la página inicial de la spec 002 (RF-1, RF-2, RF-3, RNF-1).
@@ -24,6 +26,10 @@ class InicioControllerPaginaTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    // El manejador global de excepciones de la spec 001 también entra en este slice y necesita el servicio.
+    @MockitoBean
+    private ICargaService cargaService;
 
     @Test
     void laRaizMuestraLaPaginaInicial() throws Exception {
