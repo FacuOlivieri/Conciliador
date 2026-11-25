@@ -3,11 +3,12 @@ Spec: `specs/001-subida-archivos-csv/spec.md` (Estado: aprobada, sin dudas abier
 Estado del plan: aprobado (2026-11-24)
 
 ## 0. Precondiciones verificadas
-- Spec aprobada el 2026-11-24, 23 RF y 6 RNF, sin dudas abiertas.
+- Spec aprobada el 2026-11-24 (cambio por la spec 002 aprobado el 2026-11-25), 24 RF y 6 RNF, sin dudas abiertas.
 - Constitución vigente: regla 1 (Spring Boot, Thymeleaf, POI, Commons CSV), regla 3 (lógica fuera de la vista), regla 4 (tests primero), regla 5 (Bean Validation, nada sensible en logs).
 - No hace falta ninguna dependencia nueva. Todo sale de `pom.xml` actual + JDK (`MessageDigest`, `CharsetDecoder`).
 - Paquete base: `com.proyecto.Coinciliador`. Estructura MVC + Helpers + Exceptions + Utils, interfaces `IXxxService`.
 - **"Hoy" como parámetro:** ningún RF depende de la fecha actual, así que ninguna función recibe "hoy". Si una spec futura agrega reglas por período (por ejemplo, mes fiscal), esas funciones lo recibirán por parámetro.
+- **Cambio por la spec 002 (página inicial), aprobado el 2026-11-25:** la pantalla de carga pasa de `GET /` a `GET /carga` y la carga lleva un tipo activo. Los cambios están marcados con **(002)** en este plan. El enum `TipoConciliacion` y todo lo de la página inicial lo crea la spec 002; este plan solo lo usa. Detalle del otro lado: `specs/002-pagina-inicial/plan.md` §1 y §8.
 
 ## 1. Archivos y responsabilidades
 
@@ -22,12 +23,12 @@ Rutas relativas a `src/main/java/com/proyecto/Coinciliador/`.
 | `ArchivoCargado` (record) | Nombre, bytes, formato, huella SHA-256, hojas listables (si es Excel) y configuración CSV detectada (separador, codificación). Los bytes se guardan para cambiar de hoja sin volver a subir. | RF-11, RF-12, RF-17, RF-20 |
 | `Resumen` (record) | Nombre con extensión, hoja usada (o vacío si es CSV), cantidad de filas con datos, vista previa (lista de filas de texto ya recortadas). | RF-18 |
 | `EstadoLugar` (interfaz sellada) | Cuatro estados: `Vacio`, `Rechazado(nombreIntentado, mensaje)`, `PendienteDeHoja(archivo)`, `Valido(archivo, resumen)`. | RF-13, RF-15, RF-16, RF-18 |
-| `Carga` (clase) | Estado de Propio y Contraparte + marca `confirmada`. Cualquier cambio de un lugar borra la confirmación. | RF-1, RF-2, RF-22, RF-23 |
+| `Carga` (clase) | Estado de Propio y Contraparte + marca `confirmada` + **(002)** `tipo` (`TipoConciliacion`, nulo hasta que se elige uno). Cualquier cambio de un lugar borra la confirmación. **(002)** `reiniciar(tipo)` deja ambos lugares en `Vacio`, sin confirmación y con ese tipo. | RF-1, RF-2, RF-22, RF-23, RF-24 |
 
 ### Repositorio (`repository/`)
 | Archivo | Responsabilidad | RF |
 |---|---|---|
-| `ICargaRepository` | Contrato: obtener la carga, guardar el estado de un lugar, marcar confirmada. | RF-2 |
+| `ICargaRepository` | Contrato: obtener la carga, guardar el estado de un lugar, marcar confirmada. **(002)** `tipoActivo()` y `reiniciar(tipo)`. | RF-2, RF-24 |
 | `CargaEnMemoriaRepository` | Única instancia (singleton de Spring) que guarda la `Carga` en memoria, con métodos sincronizados. Sin disco. | RF-2, RNF-1, RNF-2 |
 
 ### Servicios (`service/`)
@@ -41,14 +42,14 @@ Rutas relativas a `src/main/java/com/proyecto/Coinciliador/`.
 ### Controlador (`controller/`)
 | Archivo | Responsabilidad | RF |
 |---|---|---|
-| `CargaController` | Solo orquesta (regla 3). `GET /` muestra la pantalla; `POST /carga/{lugar}` sube; `POST /carga/{lugar}/hoja` elige hoja; `POST /carga/confirmar` confirma. Si Bean Validation falla, pide al service que registre el rechazo. Todo `POST` redirige a `GET /` (patrón PRG). | RF-1, RF-4, RF-5, RF-13, RF-17, RF-19, RF-23, RNF-2 |
+| `CargaController` | Solo orquesta (regla 3). **(002)** `GET /carga` muestra la pantalla (si no hay tipo activo, redirige a `/` sin mensaje); `POST /carga/{lugar}` sube; `POST /carga/{lugar}/hoja` elige hoja; `POST /carga/confirmar` confirma. Si Bean Validation falla, pide al service que registre el rechazo. Todo `POST` redirige a `GET /carga` (patrón PRG). | RF-1, RF-4, RF-5, RF-13, RF-17, RF-19, RF-23, RNF-2 |
 
 ### DTOs (`dto/`) y mapper (`mapper/`)
 | Archivo | Responsabilidad | RF |
 |---|---|---|
 | `SubidaArchivoForm` | Formulario de subida: el archivo, anotado con `@ExtensionPermitida` y `@TamanoMaximo`. | RF-3, RF-4, RF-5 |
 | `ElegirHojaForm` | Nombre de la hoja elegida, `@NotBlank`. | RF-15, RF-17 |
-| `PantallaCargaDto` / `LugarVistaDto` | Todo lo que la plantilla necesita ya calculado: textos, banderas (`mostrarSelectorHoja`, `confirmarHabilitado`, `advertenciaMismoArchivo`), filas de la vista previa. La plantilla no decide nada. | RF-18, RF-20, RF-22, regla 3 |
+| `PantallaCargaDto` / `LugarVistaDto` | Todo lo que la plantilla necesita ya calculado: textos, banderas (`mostrarSelectorHoja`, `confirmarHabilitado`, `advertenciaMismoArchivo`), filas de la vista previa y **(002)** `tituloTipo` (nombre del tipo activo). La plantilla no decide nada. | RF-18, RF-20, RF-22, regla 3 |
 | `PantallaCargaMapper` | Convierte `Carga` en `PantallaCargaDto`. Incluye la comparación de huellas para M7 y el texto de "qué falta". | RF-20, RF-22 |
 
 ### Excepciones (`exception/`)
@@ -77,7 +78,7 @@ Rutas relativas a `src/main/java/com/proyecto/Coinciliador/`.
 ### Recursos
 | Archivo | Responsabilidad | RF |
 |---|---|---|
-| `src/main/resources/templates/carga.html` | Página única con las dos tarjetas, la advertencia y el botón Confirmar. Sin lógica de negocio. | RF-1, RF-13, RF-15, RF-18, RF-22, RF-23, RNF-4 |
+| `src/main/resources/templates/carga.html` | Página única con las dos tarjetas, la advertencia y el botón Confirmar. **(002)** Muestra `tituloTipo` como título y un enlace "Volver al inicio" (`href="/"`). Sin lógica de negocio. | RF-1, RF-13, RF-15, RF-18, RF-22, RF-23, RNF-4 |
 | `src/main/resources/static/css/carga.css` | Estilos locales, sin CDN ni fuentes externas. | RNF-5 |
 | `src/main/resources/application.properties` | Límites de multipart y umbral de disco (ver D4). | RF-5, RNF-1 |
 | `README.md` (sección Módulos) | Una línea por clase creada (regla de `CLAUDE.md`). | — |
@@ -109,7 +110,7 @@ controlador.subir(lugar, form, erroresDeValidacion):
         servicio.registrarRechazo(lugar, nombre, mensajeDelError)
     si no:
         servicio.subir(lugar, nombre, bytes)
-    redirigir a "/"
+    redirigir a "/carga"                              # (002) antes "/"
 
 servicio.subir(lugar, nombre, bytes):
     intentar:
@@ -187,9 +188,23 @@ servicio.confirmar():
     si ambos válidos: repositorio.confirmar()   # control también en el servidor, no solo en el botón
 ```
 
+### 3.6 Abrir la pantalla y reiniciar la carga por tipo (RF-2, RF-24) — (002)
+```
+cargaController.mostrar():                      # GET /carga
+    si repositorio.tipoActivo() es nada: redirigir a "/"    # sin mensaje
+    pantalla = mapper.aPantalla(carga)                      # incluye tituloTipo
+    mostrar carga.html
+
+repositorio.reiniciar(tipo):                    # lo llama la spec 002 (ConciliacionService)
+    carga.tipo = tipo
+    carga.propio = Vacio; carga.contraparte = Vacio       # sin archivos ni mensajes de rechazo
+    carga.confirmada = falso
+```
+Quien decide cuándo reiniciar (sin carga en curso o tras confirmar el descarte) es la spec 002; este plan solo ofrece la operación.
+
 ## 4. Cómo se pinta en la interfaz
 
-Una sola página (`GET /`) renderizada en servidor. El diseño visual se hace con la skill `/impeccable` (regla de `CLAUDE.md`).
+Una sola página (`GET /carga`, **(002)** antes `GET /`) renderizada en servidor. El diseño visual se hace con la skill `/impeccable` (regla de `CLAUDE.md`).
 
 ```
 ┌───────────────────────────── Carga de archivos ─────────────────────────────┐
@@ -211,7 +226,8 @@ Estados de cada tarjeta:
 | Válido | Nombre con extensión, hoja usada con selector para cambiarla (si hay más de una listable), "N filas con datos", tabla de vista previa | RF-17, RF-18 |
 
 - Cada tarjeta tiene su propio formulario `multipart/form-data` con `accept=".csv,.xlsx,.xls"`. El `accept` es solo ayuda: la validación real es la del servidor.
-- Patrón PRG: después de cada `POST` se redirige a `GET /`. Refrescar no reenvía el archivo y muestra el estado guardado (RNF-2).
+- **(002)** Arriba de las tarjetas: el título con el nombre del tipo activo (`tituloTipo`) y un enlace "Volver al inicio" (`<a href="/">`), que no envía nada y por eso no descarta la carga.
+- Patrón PRG: después de cada `POST` se redirige a `GET /carga` **(002)**. Refrescar no reenvía el archivo y muestra el estado guardado (RNF-2).
 - Textos en español (RNF-4). CSS y recursos locales, sin CDN (RNF-5).
 
 ## 5. Configuración (`application.properties`)
@@ -232,11 +248,12 @@ Estados de cada tarjeta:
 | D5 | `WorkbookFactory` detecta `.xls`/`.xlsx` por contenido. | Elegir `HSSFWorkbook`/`XSSFWorkbook` por extensión: rechazaría los archivos renombrados (RF-11). |
 | D6 | Codificación: UTF-8 estricto y, si falla, Windows-1252. Texto = sin bytes 0x00. | Librería de detección (por ejemplo juniversalchardet): dependencia nueva (regla 1) para solo dos codificaciones. |
 | D7 | Separador: contar `;`, `,` y tab fuera de comillas en las primeras 20 líneas con datos; gana el que aparece en la mayor cantidad de líneas con la misma cuenta; empate → `;` (lo usual en Argentina). | Preguntar al usuario: la spec pide detectar. |
-| D8 | API normal de POI (carga la hoja en memoria). | API de streaming (SAX/eventos): mucho más código. Con 10 MB, máximo 100.000 filas y la protección anti zip bomb de POI (ratio mínimo 1 % por defecto) alcanza. Se revisa si un test con 100.000 filas supera tiempos razonables. |
+| D8 | API normal de POI (carga la hoja en memoria). | API de streaming (SAX/eventos): mucho más código. Con 10 MB, máximo 100.000 filas y la protección anti zip bomb de POI (ratio mínimo 1 % por defecto) alcanza. Se revisa si un test con 100.000 filas supera tiempos razonables. **Revisado en T12 (2026-11-25):** 100.000 filas x 3 columnas tardaron de 6 a más de 10 s; se decidió mantener la API normal y subir el límite del test a 30 s. Un xlsx de 10 MB puede tardar bastante más: si molesta en el uso real, pasar a lectura en streaming. |
 | D9 | Fórmulas: se muestra el resultado guardado en el archivo (lo que se vio en Excel al guardarlo). | Evaluar con `FormulaEvaluator`: más lento y falla con referencias a otros libros. |
 | D10 | Formato de celdas con `DataFormatter` en locale `es-AR`. | Locale por defecto de la JVM: el resultado cambiaría según la PC. |
 | D11 | Página única con PRG, sin JavaScript de lógica. | Interfaz con `fetch`/JS: más piezas y la lógica se iría a la vista (regla 3). |
 | D12 | Archivos de prueba generados por código en los tests. | Binarios en `src/test/resources`: riesgo de colar datos reales (regla 5, RNF-6) y difíciles de revisar. |
+| D13 | (002) La pantalla de carga vive en `/carga` y el tipo activo dentro de `Carga` (mismo repositorio). | Dejar la carga en `/`: contradice que la página inicial sea la primera pantalla. Un repositorio aparte para el tipo: dos fuentes de verdad (decisiones D1 y D7 de la spec 002). |
 
 ## 7. Estrategia de tests
 
@@ -254,7 +271,8 @@ Cada tarea empieza con su test en rojo (regla 4). Los archivos de prueba los gen
 | Servicio | `LectorCsvService`: vacío, solo BOM, `;;;`, binario, Excel renombrado a `.csv`, comillas sin cerrar, filas de distinto largo | RF-6, RF-8, RF-12 |
 | Servicio | `LectorExcelService`: una hoja, varias, oculta, gráfico, cifrado `.xlsx`/`.xls`, dañado, `.xlsx` renombrado a `.xls` y al revés, fórmulas, `#REF!`, combinadas, filas ocultas | RF-6, RF-9, RF-10, RF-11, RF-14, RF-15 |
 | Servicio | `CargaService` + repositorio: rechazo conserva el otro lugar, reemplazo descarta la hoja, cambio de hoja sin resubir, mezcla CSV + Excel, mismo archivo, confirmar solo con dos válidos | RF-2, RF-13, RF-16, RF-17, RF-19, RF-20, RF-21, RF-22, RF-23 |
-| Web (MockMvc) | `CargaController`: cada M1–M8 aparece en el HTML dentro de la tarjeta correcta, redirección PRG, botón Confirmar con `disabled`, archivo de más de 30 MB → M2 | RF-1, RF-4, RF-5, RF-13, RF-22, RF-23, RNF-2, RNF-4 |
+| Repositorio | **(002)** `reiniciar(tipo)`: deja ambos lugares en `Vacio` (incluso si había uno `Rechazado`), sin confirmación y con ese tipo; `tipoActivo()` lo devuelve y empieza en nada | RF-2, RF-24 |
+| Web (MockMvc) | `CargaController`: **(002)** `GET /carga` (sin tipo activo redirige a `/` sin mensaje), cada M1–M8 aparece en el HTML dentro de la tarjeta correcta, redirección PRG a `/carga`, botón Confirmar con `disabled`, archivo de más de 30 MB → M2 | RF-1, RF-4, RF-5, RF-13, RF-22, RF-23, RNF-2, RNF-4 |
 | Configuración | Las propiedades de multipart cargadas cumplen umbral > máximo | RNF-1 |
 | Logs | `OutputCaptureExtension` de Spring Boot: tras subir un archivo, ni el nombre ni su contenido aparecen en la salida | RNF-3 |
 | Navegador (manual) | Diseño de tarjetas, tabla de vista previa, recortes visibles, funcionamiento con la red desactivada | RF-18 (presentación), RNF-5 |
@@ -266,7 +284,7 @@ El test existente `contextLoads` sigue pasando: no hay datasource que configurar
 | RF / RNF | Componentes | Test |
 |---|---|---|
 | RF-1 | `Lugar`, `CargaController`, `carga.html` | Web |
-| RF-2 | `CargaEnMemoriaRepository`, `Carga` | Servicio |
+| RF-2 | `CargaEnMemoriaRepository`, `Carga` (con `tipo`) | Servicio, repositorio |
 | RF-3, RF-4 | `ExtensionHelper`, `@ExtensionPermitida` | Unitario, validación, web |
 | RF-5 | `@TamanoMaximo`, `ManejadorGlobalExcepciones`, config | Validación, web |
 | RF-6 | `AcumuladorFilas`, lectores | Servicio |
@@ -283,8 +301,9 @@ El test existente `contextLoads` sigue pasando: no hay datasource que configurar
 | RF-21 | `AnalizadorArchivoService` | Servicio |
 | RF-22 | `PantallaCargaMapper`, `CargaService.confirmar` | Servicio, web |
 | RF-23 | `Carga.confirmada`, `MensajeCarga.M8` | Servicio, web |
+| RF-24 | `Carga.reiniciar`, `ICargaRepository.reiniciar` / `tipoActivo`, `PantallaCargaDto.tituloTipo` | Repositorio, mapper, web |
 | RNF-1 | `CargaEnMemoriaRepository`, config multipart | Configuración |
-| RNF-2 | Repositorio singleton + PRG | Web |
+| RNF-2 | Repositorio singleton (guarda también el tipo activo) + PRG | Web |
 | RNF-3 | Sin logs de nombre ni contenido en ningún componente | Logs |
 | RNF-4 | `MensajeCarga`, `carga.html` | Web |
 | RNF-5 | `static/css`, sin CDN | Navegador |
@@ -294,4 +313,5 @@ El test existente `contextLoads` sigue pasando: no hay datasource que configurar
 - **Tamaño de la spec:** el plan crea unos 30 archivos. Si en `tasks.md` salen más de 10 tareas, la skill pide proponer dividir la spec (por ejemplo, 001a CSV y 001b Excel).
 - **Memoria:** un `.xlsx` de 10 MB puede ocupar cientos de MB al abrirse con la API normal de POI. Si el test de 100.000 filas es lento o falla por memoria, se revisa D8.
 - **APIs a confirmar en su tarea (con test):** la forma exacta de leer el resultado guardado de una fórmula (D9) y la creación de un `.xls` cifrado para los tests.
+- **Dos sesiones sobre las mismas piezas (002):** `Carga`, el repositorio, `CargaController` y `carga.html` los escribe la 001; la 002 solo los usa. `TipoConciliacion` lo crea la 002 (hoy en su worktree, sin mergear): antes de T13 hay que tenerlo en esta rama, y si no está se pide a esa sesión un commit solo con el enum.
 - **Regla 5 resuelta así:** Bean Validation donde la regla es un atributo del archivo (extensión, tamaño); los rechazos que necesitan leer el contenido usan una excepción de dominio. Si preferís otra interpretación, conviene decidirlo antes de `tasks.md`.

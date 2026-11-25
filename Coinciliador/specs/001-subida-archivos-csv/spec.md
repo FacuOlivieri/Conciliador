@@ -4,6 +4,8 @@ Estado: aprobada
 ## Contexto y objetivo
 El contador concilia información de dos fuentes: su propio registro (por ejemplo, el libro de IVA) contra uno externo (AFIP, banco, cliente). Antes de conciliar necesita cargar ambos archivos y confirmar que son los correctos. Esta spec cubre solo esa carga: recibir los dos archivos CSV o Excel, rechazar los que no sirven con un motivo claro, mostrar un resumen de cada uno y dejar la carga lista para conciliar. La conciliación y la descarga del resultado se definen en specs posteriores.
 
+Relación con la spec 002 (página inicial): la pantalla de carga deja de ser la primera pantalla y se abre desde la página inicial, con un tipo de conciliación ya elegido. Cómo se elige el tipo, el título de la pantalla de carga, el enlace para volver al inicio y el aviso antes de descartar una carga los define la spec 002.
+
 ## Usuarios
 - Contador que usa la aplicación en su propia computadora. Un solo usuario, sin conocimientos técnicos.
 
@@ -16,6 +18,7 @@ El contador concilia información de dos fuentes: su propio registro (por ejempl
 ## Definiciones
 - **Propio / Contraparte:** los dos lugares de carga. Propio es el registro del contador; Contraparte, el externo.
 - **Carga:** el par de archivos Propio y Contraparte con el que se trabaja. Hay una sola carga a la vez.
+- **Tipo activo:** el tipo de conciliación (IVA, Ventas, Compras o Ingresos Brutos) al que pertenece la carga actual. Se define en la spec 002.
 - **Celda con datos:** celda con al menos un carácter distinto de espacio. En una fórmula cuenta su resultado. La marca BOM al inicio de un CSV no es dato.
 - **Fila con datos:** fila con al menos una celda con datos. Las filas sin datos se ignoran en el conteo y en la vista previa.
 - **Hoja listable:** hoja de un Excel que es visible, contiene celdas (no es una hoja de gráfico) y tiene al menos una fila con datos.
@@ -28,7 +31,7 @@ El contador concilia información de dos fuentes: su propio registro (por ejempl
 
 ## Requisitos funcionales
 - RF-1: EL SISTEMA ofrece dos lugares de carga, Propio y Contraparte, de un archivo cada uno.
-- RF-2: EL SISTEMA mantiene una sola carga a la vez.
+- RF-2: EL SISTEMA mantiene una sola carga a la vez, asociada al tipo activo.
 - RF-3: EL SISTEMA acepta archivos con extensión `.csv`, `.xlsx` o `.xls`, sin distinguir mayúsculas de minúsculas. La extensión es el texto después del último punto del nombre.
 - RF-4: SI un archivo no tiene extensión o tiene otra, ENTONCES EL SISTEMA lo rechaza con el mensaje M1.
 - RF-5: SI un archivo supera los 10 MB, ENTONCES EL SISTEMA lo rechaza con el mensaje M2.
@@ -50,6 +53,7 @@ El contador concilia información de dos fuentes: su propio registro (por ejempl
 - RF-21: EL SISTEMA permite que Propio y Contraparte tengan formatos distintos (por ejemplo, un CSV y un Excel).
 - RF-22: MIENTRAS Propio y Contraparte no sean ambos válidos, EL SISTEMA mantiene deshabilitada la acción Confirmar e indica qué lugar falta o no es válido.
 - RF-23: CUANDO el usuario confirma, EL SISTEMA muestra el mensaje M8.
+- RF-24: CUANDO se abre una carga vacía para un tipo de conciliación (spec 002, RF-4 y RF-8), EL SISTEMA deja Propio y Contraparte sin archivo ni mensaje de rechazo, sin confirmar y con ese tipo como tipo activo.
 
 ### Catálogo de mensajes
 | Código | Mensaje |
@@ -65,7 +69,7 @@ El contador concilia información de dos fuentes: su propio registro (por ejempl
 
 ## Requisitos no funcionales
 - RNF-1: Los archivos existen solo mientras la aplicación está abierta; no se escriben en disco y se pierden al cerrarla.
-- RNF-2: Refrescar la página conserva la carga; dos pestañas abiertas comparten la misma carga.
+- RNF-2: Refrescar la página conserva la carga y su tipo activo; dos pestañas abiertas comparten la misma carga.
 - RNF-3: Ni el nombre ni el contenido de los archivos se escriben en los registros de la aplicación.
 - RNF-4: Todos los textos y mensajes están en español.
 - RNF-5: Funciona sin conexión a internet: no depende de recursos externos.
@@ -92,6 +96,10 @@ El contador concilia información de dos fuentes: su propio registro (por ejempl
 - Mismo archivo en Propio y Contraparte: advertencia M7, no bloquea (RF-20).
 - Nombre de archivo con acentos o espacios: se muestra tal cual.
 - El usuario abandona la elección de hoja: el archivo queda sin hoja y no es válido (RF-16).
+- Cambio de tipo cuando los lugares están vacíos o con un archivo rechazado: no hay aviso (spec 002) y la carga queda vacía del tipo nuevo, sin los mensajes de rechazo (RF-24).
+- Cambio de tipo con una carga ya confirmada (M8): se descarta también la confirmación; la carga nueva empieza sin confirmar (RF-24).
+- Volver a la página inicial y regresar a la carga con el mismo tipo: se conserva todo (archivos, hoja elegida, advertencia M7 y confirmación) (RNF-2; spec 002, RF-6 y RF-10).
+- Abrir la pantalla de carga sin tipo activo y sin carga en curso: el usuario vuelve a la página inicial, sin mensaje (spec 002).
 
 ## Fuera de alcance
 - Conciliar los archivos y descargar el resultado.
@@ -101,6 +109,7 @@ El contador concilia información de dos fuentes: su propio registro (por ejempl
 - Más de una carga a la vez o más de dos archivos por carga.
 - Historial de cargas o archivos guardados.
 - Varios usuarios.
+- Elegir o cambiar el tipo de conciliación, la página inicial y el aviso antes de descartar una carga: los define la spec 002.
 
 ## Criterios de finalización
 - Cada RF está cubierto por un test automatizado. Si un RF mezcla datos y presentación, los datos llevan test y la presentación se verifica en el navegador.
