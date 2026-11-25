@@ -47,6 +47,19 @@ Pendiente de verificar: `jpackage --type exe/msi` en Windows requiere WiX Toolse
 
 Paquete base `com.proyecto.Coinciliador`.
 
+**`enums/` (spec 002, página inicial)**
+- `TipoConciliacion`: los cuatro tipos de conciliación (IVA, Ventas, Compras, Ingresos Brutos) con nombre, slug para la URL y frase de ayuda; `deSlug` busca un tipo por su slug.
+- `MensajeInicio`: catálogo de mensajes P1 y D1 de la spec 002; única fuente de esos textos.
+- `ResultadoEleccion`: qué pasa al elegir un tipo: `ABRIR_CARGA` o `PEDIR_CONFIRMACION`.
+
+**`helper/` (spec 002, página inicial)**
+- `CargaEnCursoHelper`: dice si hay una carga en curso: algún lugar con archivo aceptado (aunque falte la hoja) o carga confirmada; vacío y rechazado no cuentan.
+- `EleccionTipoHelper`: decide al elegir un tipo: pide confirmación solo si hay carga en curso de otro tipo; si no, abre la carga.
+
+**`dto/` y `utils/validacion/` (spec 002, página inicial)**
+- `EleccionTipoForm`: el tipo elegido tal como llega en la URL (slug), validado con `@TipoConciliacionValido`.
+- `TipoConciliacionValido` y `TipoConciliacionValidoValidator`: restricción de Bean Validation; el slug debe ser el de un tipo existente, si no el mensaje es el código P1.
+
 **`model/`**
 - `Lugar`: los dos lugares de carga, Propio y Contraparte, con su etiqueta para la vista.
 - `FormatoArchivo`: formato real del archivo (CSV o EXCEL; `.xls` y `.xlsx` son ambos EXCEL).
