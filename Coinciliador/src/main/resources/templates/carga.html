@@ -13,6 +13,15 @@
     <h1 th:text="${pantalla.tituloTipo}">Tipo de conciliación</h1>
     <section th:replace="~{fragmentos/tarjeta-lugar :: tarjeta(${pantalla.propio}, 'PROPIO')}"></section>
     <section th:replace="~{fragmentos/tarjeta-lugar :: tarjeta(${pantalla.contraparte}, 'CONTRAPARTE')}"></section>
+
+    <p th:if="${pantalla.advertenciaMismoArchivo}" th:text="${pantalla.textoAdvertencia}" role="status">Advertencia</p>
+    <!--/* El botón se deshabilita porque lo pide RF-22; el servidor vuelve a controlarlo al confirmar. */-->
+    <form method="post" th:action="@{/carga/confirmar}">
+        <button type="submit" id="confirmar" th:disabled="${!pantalla.confirmarHabilitado}"
+                th:aria-describedby="${pantalla.confirmarHabilitado} ? null : 'falta'">Confirmar</button>
+    </form>
+    <p th:unless="${pantalla.confirmarHabilitado}" id="falta" th:text="${pantalla.textoFalta}">Qué falta</p>
+    <p th:if="${pantalla.confirmada}" th:text="${pantalla.mensajeFinal}" role="status">Listo</p>
 </main>
 </body>
 </html>

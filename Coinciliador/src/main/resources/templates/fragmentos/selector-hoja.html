@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<body>
+<!--/* Elige o cambia la hoja de un Excel. Sin hoja usada no hay ninguna opción preseleccionada (RF-15). */-->
+<form th:fragment="selector(lugar, codigo)" method="post"
+      th:action="@{/carga/{codigo}/hoja(codigo=${codigo})}">
+    <fieldset>
+        <legend>Hojas de <span th:text="${lugar.etiqueta}">lugar</span></legend>
+        <label th:each="hoja : ${lugar.hojas}">
+            <input type="radio" name="hoja" required th:value="${hoja}" th:checked="${hoja == lugar.hojaUsada}">
+            <span th:text="${hoja}">Hoja</span>
+        </label>
+    </fieldset>
+    <button type="submit">Usar esta hoja</button>
+</form>
+</body>
+</html>

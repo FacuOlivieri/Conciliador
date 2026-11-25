@@ -1,5 +1,6 @@
 package com.proyecto.Coinciliador.controller;
 
+import com.proyecto.Coinciliador.dto.ElegirHojaForm;
 import com.proyecto.Coinciliador.dto.SubidaArchivoForm;
 import com.proyecto.Coinciliador.enums.Lugar;
 import com.proyecto.Coinciliador.enums.MensajeCarga;
@@ -50,6 +51,22 @@ public class CargaController {
         } else {
             servicio.subir(lugar, nombreDe(formulario.archivo()), formulario.archivo().getBytes());
         }
+        return REDIRIGIR_A_LA_CARGA;
+    }
+
+    /** Sin hoja elegida no hay nada que cambiar: el service además ignora las hojas que no existen (RF-15, RF-17). */
+    @PostMapping("/carga/{lugar}/hoja")
+    public String elegirHoja(@PathVariable Lugar lugar, @Valid @ModelAttribute("eleccion") ElegirHojaForm formulario,
+            BindingResult errores) {
+        if (!errores.hasErrors()) {
+            servicio.elegirHoja(lugar, formulario.hoja());
+        }
+        return REDIRIGIR_A_LA_CARGA;
+    }
+
+    @PostMapping("/carga/confirmar")
+    public String confirmar() {
+        servicio.confirmar();
         return REDIRIGIR_A_LA_CARGA;
     }
 

@@ -9,15 +9,32 @@
     <div th:switch="${lugar.estado.name()}">
         <p th:case="'VACIO'">Todavía no cargaste un archivo.</p>
         <p th:case="'RECHAZADO'" th:id="|error-${codigo}|" role="alert">
-            <strong th:text="${lugar.nombreArchivo}">archivo</strong>
+            <!--/* Un archivo de más de 30 MB se corta antes de leerlo: no hay nombre que mostrar. */-->
+            <strong th:unless="${#strings.isEmpty(lugar.nombreArchivo)}" th:text="${lugar.nombreArchivo}">archivo</strong>
             <span th:text="${lugar.mensajeRechazo}">Motivo del rechazo</span>
         </p>
-        <p th:case="'PENDIENTE_DE_HOJA'">
-            <strong th:text="${lugar.nombreArchivo}">archivo</strong>: falta elegir la hoja.
-        </p>
-        <p th:case="'VALIDO'">
-            Archivo cargado: <strong th:text="${lugar.nombreArchivo}">archivo</strong>
-        </p>
+        <div th:case="'PENDIENTE_DE_HOJA'">
+            <p><strong th:text="${lugar.nombreArchivo}">archivo</strong>: falta elegir la hoja.</p>
+            <form th:replace="~{fragmentos/selector-hoja :: selector(${lugar}, ${codigo})}"></form>
+        </div>
+        <div th:case="'VALIDO'">
+            <p>Archivo cargado: <strong th:text="${lugar.nombreArchivo}">archivo</strong></p>
+            <p th:if="${lugar.hojaUsada != null}">Hoja: <span th:text="${lugar.hojaUsada}">Hoja</span></p>
+            <p th:text="${lugar.cantidadFilas == 1} ? '1 fila con datos' : |${lugar.cantidadFilas} filas con datos|">
+                0 filas con datos
+            </p>
+            <table>
+                <caption>Vista previa de <span th:text="${lugar.etiqueta}">lugar</span></caption>
+                <tbody>
+                <tr th:each="fila : ${lugar.vistaPrevia}">
+                    <td th:each="celda : ${fila}" th:text="${celda}">celda</td>
+                </tr>
+                </tbody>
+            </table>
+            <th:block th:if="${lugar.mostrarSelectorHoja}">
+                <form th:replace="~{fragmentos/selector-hoja :: selector(${lugar}, ${codigo})}"></form>
+            </th:block>
+        </div>
     </div>
 
     <form method="post" th:action="@{/carga/{codigo}(codigo=${codigo})}" enctype="multipart/form-data"

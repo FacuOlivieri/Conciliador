@@ -89,7 +89,7 @@ Si preferís partir la spec (por ejemplo, 001 CSV + interfaz y 002 Excel), se pu
   - Cambio por la spec 002: la pantalla es `GET /carga` (ya no `GET /`) y la plantilla suma el título del tipo y el enlace "Volver al inicio" (`href="/"`).
   - Hecho cuando: `CargaControllerSubidaTest` (MockMvc) pasa con: `GET /carga` (con tipo activo) muestra las tarjetas Propio y Contraparte, el nombre del tipo y el enlace `href="/"`; `GET /carga` sin tipo activo redirige a `/` sin mensaje; `POST /carga/PROPIO` redirige a `/carga`; `.ods` → M1 dentro de la tarjeta de Propio; archivo de 10.485.761 bytes → M2; después de subir, un `GET /carga` nuevo sigue mostrando el archivo.
 
-[ ] **T19. `CargaController`: hoja, confirmar y archivos muy grandes.** RF-5, RF-13, RF-15, RF-17, RF-22, RF-23
+[x] **T19. `CargaController`: hoja, confirmar y archivos muy grandes.** RF-5, RF-13, RF-15, RF-17, RF-22, RF-23
   - Crea `ManejadorGlobalExcepciones`.
   - Cambio por la spec 002: los tests parten de `GET /carga` y todas las redirecciones van a `/carga`.
   - Hecho cuando: `CargaControllerHojaYConfirmacionTest` pasa con: Excel con varias hojas → se muestran las opciones sin preselección; `POST /carga/CONTRAPARTE/hoja` → resumen visible; botón Confirmar con `disabled` hasta tener dos válidos; tras confirmar aparece M8 y la redirección va a `/carga`; un archivo de más de 30 MB → M2 en la tarjeta correcta.
