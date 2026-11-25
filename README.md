@@ -56,6 +56,11 @@ Paquete base `com.proyecto.Coinciliador`.
 - `CargaEnCursoHelper`: dice si hay una carga en curso: algún lugar con archivo aceptado (aunque falte la hoja) o carga confirmada; vacío y rechazado no cuentan.
 - `EleccionTipoHelper`: decide al elegir un tipo: pide confirmación solo si hay carga en curso de otro tipo; si no, abre la carga.
 
+**`controller/` y recursos (spec 002, página inicial)**
+- `InicioController`: `GET /`, la primera pantalla de la aplicación; muestra las tarjetas de los tipos de conciliación.
+- `templates/inicio.html`: la página inicial; cada tipo es un formulario `POST` con un botón, sin JavaScript.
+- `static/css/inicio.css`: estilos mínimos y locales (sin CDN); el diseño final llega en la tarea T9.
+
 **`dto/`, `mapper/` y `utils/validacion/` (spec 002, página inicial)**
 - `TipoVistaDto`: una tarjeta de la página inicial (slug, nombre y frase de ayuda de un tipo).
 - `InicioDto`: las cuatro tarjetas y, si hay que avisar algo, el texto del mensaje (null si no).

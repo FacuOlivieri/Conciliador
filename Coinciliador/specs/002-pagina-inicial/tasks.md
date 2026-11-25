@@ -36,7 +36,7 @@ El desglose dio **10 tareas**, dentro del máximo, así que no hace falta dividi
   - Crea `InicioDto`, `TipoVistaDto`, `ConfirmacionCambioDto` e `InicioMapper`.
   - Hecho cuando: `InicioMapperTest` pasa con 4 tarjetas en orden, cada una con slug, nombre y ayuda correctos; mensaje P1 presente solo si se lo pide; y `ConfirmacionCambioDto` con el nombre del tipo activo, el del elegido y el texto D1.
 
-[ ] **T5. `InicioController` (solo `GET /`) y plantilla mínima.** RF-1, RF-2, RF-3, RNF-1
+[x] **T5. `InicioController` (solo `GET /`) y plantilla mínima.** RF-1, RF-2, RF-3, RNF-1
   - Plantilla funcional sin diseño: título, cuatro tarjetas como formularios con botón, y el lugar para P1. CSS mínimo local. Las acciones de las tarjetas todavía no existen.
   - Hecho cuando: `InicioControllerPaginaTest` (MockMvc) pasa con `GET /` → 200, las 4 tarjetas en orden con su frase de ayuda, cada una dentro de un `<form method="post">` con `<button>`, y ningún `href` ni `src` que empiece con `http://` o `https://`.
 

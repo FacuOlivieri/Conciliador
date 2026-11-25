@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Conciliador</title>
+    <link rel="stylesheet" th:href="@{/css/inicio.css}">
+</head>
+<body>
+<main>
+    <h1>¿Qué querés conciliar?</h1>
+
+    <p th:if="${inicio.mensaje != null}" role="alert" th:text="${inicio.mensaje}"></p>
+
+    <div class="tipos">
+        <form th:each="tipo : ${inicio.tipos}" method="post"
+              th:action="@{/conciliacion/{slug}(slug=${tipo.slug})}">
+            <button type="submit">
+                <span class="tipo-nombre" th:text="${tipo.nombre}">IVA</span>
+                <span class="tipo-ayuda" th:text="${tipo.ayuda}">Frase de ayuda</span>
+            </button>
+        </form>
+    </div>
+</main>
+</body>
+</html>
