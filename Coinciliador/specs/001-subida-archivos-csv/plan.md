@@ -19,7 +19,7 @@ Rutas relativas a `src/main/java/com/proyecto/Coinciliador/`.
 |---|---|---|
 | `Lugar` (enum) | `PROPIO`, `CONTRAPARTE`, con su etiqueta para la vista. | RF-1 |
 | `FormatoArchivo` (enum) | `CSV`, `EXCEL`. | RF-3, RF-21 |
-| `MensajeCarga` (enum) | Catálogo M1–M8 con su texto exacto en español. Única fuente de los mensajes. | RF-4–10, RF-20, RF-23 |
+| `MensajeCarga` (enum) | Catálogo M1–M11 con su texto exacto en español. Única fuente de los mensajes. M9–M11 son fragmentos con el lugar como parámetro. | RF-4–10, RF-20, RF-22, RF-23 |
 | `ArchivoCargado` (record) | Nombre, bytes, formato, huella SHA-256, hojas listables (si es Excel) y configuración CSV detectada (separador, codificación). Los bytes se guardan para cambiar de hoja sin volver a subir. | RF-11, RF-12, RF-17, RF-20 |
 | `Resumen` (record) | Nombre con extensión, hoja usada (o vacío si es CSV), cantidad de filas con datos, vista previa (lista de filas de texto ya recortadas). | RF-18 |
 | `EstadoLugar` (interfaz sellada) | Cuatro estados: `Vacio`, `Rechazado(nombreIntentado, mensaje)`, `PendienteDeHoja(archivo)`, `Valido(archivo, resumen)`. | RF-13, RF-15, RF-16, RF-18 |

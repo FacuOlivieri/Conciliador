@@ -51,7 +51,7 @@ Relación con la spec 002 (página inicial): la pantalla de carga deja de ser la
 - RF-19: CUANDO el usuario reemplaza el archivo de un lugar, EL SISTEMA lo valida de nuevo, descarta la hoja elegida antes y actualiza el resumen.
 - RF-20: CUANDO Propio y Contraparte son el mismo archivo, EL SISTEMA muestra la advertencia M7 sin impedir continuar.
 - RF-21: EL SISTEMA permite que Propio y Contraparte tengan formatos distintos (por ejemplo, un CSV y un Excel).
-- RF-22: MIENTRAS Propio y Contraparte no sean ambos válidos, EL SISTEMA mantiene deshabilitada la acción Confirmar e indica qué lugar falta o no es válido.
+- RF-22: MIENTRAS Propio y Contraparte no sean ambos válidos, EL SISTEMA mantiene deshabilitada la acción Confirmar e indica qué lugar falta o no es válido (M9 a M11).
 - RF-23: CUANDO el usuario confirma, EL SISTEMA muestra el mensaje M8.
 - RF-24: CUANDO se abre una carga vacía para un tipo de conciliación (spec 002, RF-4 y RF-8), EL SISTEMA deja Propio y Contraparte sin archivo ni mensaje de rechazo, sin confirmar y con ese tipo como tipo activo.
 
@@ -66,6 +66,11 @@ Relación con la spec 002 (página inicial): la pantalla de carga deja de ser la
 | M6 | El archivo está protegido con contraseña. Quitale la contraseña desde Excel y volvé a subirlo. |
 | M7 | Propio y Contraparte son el mismo archivo. Revisá si es lo que querés conciliar. |
 | M8 | Archivos listos para conciliar. |
+| M9 | falta cargar el archivo de {lugar} |
+| M10 | el archivo de {lugar} no es válido |
+| M11 | falta elegir la hoja de {lugar} |
+
+M9 a M11 son fragmentos: `{lugar}` es "Propio" o "Contraparte". Si hay más de uno se unen con "; " y el texto final empieza con mayúscula.
 
 ## Requisitos no funcionales
 - RNF-1: Los archivos existen solo mientras la aplicación está abierta; no se escriben en disco y se pierden al cerrarla.

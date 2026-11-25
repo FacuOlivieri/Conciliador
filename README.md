@@ -75,11 +75,11 @@ Paquete base `com.proyecto.Coinciliador`.
 **`model/`**
 - `Lugar`: los dos lugares de carga, Propio y Contraparte, con su etiqueta para la vista.
 - `FormatoArchivo`: formato real del archivo (CSV o EXCEL; `.xls` y `.xlsx` son ambos EXCEL).
-- `MensajeCarga`: catálogo de mensajes M1–M8 de la spec 001; única fuente de esos textos.
+- `MensajeCarga`: catálogo de mensajes M1–M11 de la spec 001; única fuente de esos textos. M9–M11 son los fragmentos de "qué falta" para confirmar.
 - `ArchivoCargado`: archivo aceptado con sus bytes, huella y datos para releerlo (hojas o separador y codificación).
 - `Resumen`: lo que ve el contador de un archivo válido: nombre, hoja, cantidad de filas y vista previa.
 - `EstadoLugar`: interfaz sellada con los estados de un lugar: `Vacio`, `Rechazado`, `PendienteDeHoja`, `Valido`.
-- `Carga`: la única carga de la aplicación: estado de Propio y Contraparte, si fue confirmada y su tipo de conciliación (nulo hasta que se elige). Es inmutable: cada cambio devuelve una carga nueva; cambiar un lugar borra la confirmación y `vacia(tipo)` la deja sin archivos ni rechazos.
+- `Carga`: la única carga de la aplicación: estado de Propio y Contraparte, si fue confirmada y su tipo de conciliación (nulo hasta que se elige). Es inmutable: cada cambio devuelve una carga nueva; cambiar un lugar borra la confirmación; `vacia(tipo)` la deja sin archivos ni rechazos y `ambosValidos()` dice si Propio y Contraparte son válidos.
 
 **`helper/`**
 - `ExtensionHelper`: extensión de un nombre de archivo en minúsculas y si es una de las permitidas (`csv`, `xlsx`, `xls`).
@@ -99,6 +99,17 @@ Paquete base `com.proyecto.Coinciliador`.
 **`dto/`**
 - `SubidaArchivoForm`: formulario de subida; el archivo se valida con `@ExtensionPermitida` y `@TamanoMaximo`.
 - `ElegirHojaForm`: nombre de la hoja elegida de un Excel (`@NotBlank`).
+- `LugarVistaDto`: todo lo que la plantilla necesita de un lugar (Propio o Contraparte): su estado (vacío, rechazado, pendiente de hoja o válido), el nombre, el mensaje de rechazo, las hojas, si se muestra el selector de hoja y el resumen con su vista previa.
+- `PantallaCargaDto`: todo lo que necesita la pantalla de carga ya calculado: título del tipo, los dos lugares, si Confirmar está habilitado y el texto de qué falta, la advertencia M7 y el mensaje M8.
+
+**`controller/`**
+- `CargaController`: pantalla de carga. `GET /carga` la muestra (sin tipo de conciliación elegido redirige a `/` sin mensaje) y `POST /carga/{lugar}` sube un archivo; si la validación de entrada falla guarda el rechazo M1 o M2. Siempre redirige a `/carga` después de subir.
+
+**`templates/`**
+- `carga.html` y `fragmentos/tarjeta-lugar.html`: plantilla mínima sin diseño, con el título del tipo, el enlace "Volver al inicio" y una tarjeta por lugar con su estado y su formulario de subida.
+
+**`mapper/`**
+- `PantallaCargaMapper`: convierte la carga en `PantallaCargaDto`. Calcula el título del tipo, habilita Confirmar solo con ambos lugares válidos y explica qué falta, avisa M7 si las huellas de los dos archivos coinciden (aunque los nombres difieran) y muestra M8 solo si la carga está confirmada.
 
 **`utils/validacion/`**
 - `ExtensionPermitida` y `ExtensionPermitidaValidator`: restricción de Bean Validation, el archivo debe ser `.csv`, `.xlsx` o `.xls` (mensaje M1; sin archivo también falla).
@@ -106,8 +117,12 @@ Paquete base `com.proyecto.Coinciliador`.
 
 **`service/`**
 - `ILectorCsvService` y `LectorCsvService`: leen un CSV. Rechazan con M3 (vacío), M5 (no es texto o comillas sin cerrar) o M4 (más de 100.000 filas con datos). Si es válido, detectan codificación y separador, cuentan las filas con datos y arman la vista previa.
-- `ILectorExcelService` y `LectorExcelService`: leen un Excel con POI. Lo abren por contenido (`.xls` o `.xlsx`) y rechazan con M3 (sin hojas listables), M4 (más de 100.000 filas con datos), M5 (no es Excel o dañado) o M6 (cifrado). Calculan las hojas listables (visibles y con al menos una fila con datos): con una devuelven el archivo válido con su resumen; con varias, queda pendiente de elegir hoja. Las celdas se muestran como en Excel, con números en es-AR; de una fórmula se muestra su resultado guardado y los errores (`#REF!`) tal cual.
+- `ILectorExcelService` y `LectorExcelService`: leen un Excel con POI. Lo abren por contenido (`.xls` o `.xlsx`) y rechazan con M3 (sin hojas listables), M4 (más de 100.000 filas con datos), M5 (no es Excel o dañado) o M6 (cifrado). Calculan las hojas listables (visibles y con al menos una fila con datos): con una devuelven el archivo válido con su resumen; con varias, queda pendiente de elegir hoja. `resumirHoja` arma el resumen de una hoja releyendo los bytes ya guardados. Las celdas se muestran como en Excel, con números en es-AR; de una fórmula se muestra su resultado guardado y los errores (`#REF!`) tal cual.
 - `IAnalizadorArchivoService` y `AnalizadorArchivoService`: según la extensión del nombre, derivan el archivo al lector de CSV (`.csv`) o al de Excel (cualquier otra), y devuelven el estado resultante. Permiten que Propio y Contraparte tengan formatos distintos.
+- `ICargaService` y `CargaService`: orquestan la carga. `subir` analiza el archivo y lo guarda en su lugar reemplazando lo anterior; si se rechaza, el lugar queda `Rechazado` con su motivo y el otro lugar no se toca. `registrarRechazo` guarda un rechazo ya detectado por la validación de entrada (M1 o M2). `elegirHoja` elige o cambia la hoja de un Excel sin volver a subirlo (se ignora si el lugar no tiene un Excel o la hoja no existe; si supera el máximo de filas queda rechazado con M4). `confirmar` confirma solo si Propio y Contraparte son válidos. `cargaActual` entrega la carga para mostrarla.
+
+**Configuración (`application.properties`)**
+- Subida de archivos: hasta 30 MB por archivo y por petición (tope técnico; el límite de negocio de 10 MB lo aplica `@TamanoMaximo`) y umbral de disco de 31 MB, así los archivos se quedan en memoria y nunca se escriben en un temporal.
 
 **Pruebas (`src/test`)**
 - `FabricaArchivosPrueba`: genera por código los CSV, los Excel (`.xlsx` y `.xls`) con las hojas que pida el test, y los Excel cifrados, con datos ficticios.

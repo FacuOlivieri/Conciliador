@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="|${pantalla.tituloTipo} - Carga de archivos|">Carga de archivos</title>
+</head>
+<body>
+<header>
+    <a href="/">Volver al inicio</a>
+</header>
+<main>
+    <h1 th:text="${pantalla.tituloTipo}">Tipo de conciliación</h1>
+    <section th:replace="~{fragmentos/tarjeta-lugar :: tarjeta(${pantalla.propio}, 'PROPIO')}"></section>
+    <section th:replace="~{fragmentos/tarjeta-lugar :: tarjeta(${pantalla.contraparte}, 'CONTRAPARTE')}"></section>
+</main>
+</body>
+</html>
