@@ -67,8 +67,9 @@ Si preferís partir la spec (por ejemplo, 001 CSV + interfaz y 002 Excel), se pu
 
 ## Bloque C — Carga, web e interfaz
 
-[ ] **T13. `Carga` y `CargaEnMemoriaRepository`.** RF-2, RNF-1
-  - Hecho cuando: `CargaEnMemoriaRepositoryTest` pasa con: guardar Propio no modifica Contraparte; cualquier guardado borra la confirmación; dos lecturas devuelven la misma carga.
+[ ] **T13. `Carga` y `CargaEnMemoriaRepository`.** RF-2, RF-24, RNF-1
+  - Cambio por la spec 002: `Carga` suma el campo `tipo` (`TipoConciliacion`, nulo hasta que se elige uno) y `reiniciar(tipo)`; `ICargaRepository` suma `tipoActivo()` y `reiniciar(tipo)`. El enum lo crea la spec 002 (sesión del front): si todavía no está en esta rama, pedirlo antes de empezar.
+  - Hecho cuando: `CargaEnMemoriaRepositoryTest` pasa con: guardar Propio no modifica Contraparte; cualquier guardado borra la confirmación; dos lecturas devuelven la misma carga; `tipoActivo()` empieza en nada; `reiniciar(tipo)` deja ambos lugares en `Vacio` (también si uno estaba `Rechazado`), sin confirmación y con ese tipo.
 
 [ ] **T14. `CargaService`: subir, rechazar y reemplazar.** RF-2, RF-13, RF-19
   - Hecho cuando: `CargaServiceSubidaTest` pasa con: rechazo en Contraparte → Propio válido se conserva; reemplazar un Excel ya elegido descarta la hoja; reemplazar un archivo válido por uno inválido deja el lugar en `Rechazado`.
@@ -76,26 +77,30 @@ Si preferís partir la spec (por ejemplo, 001 CSV + interfaz y 002 Excel), se pu
 [ ] **T15. `CargaService`: elegir hoja y confirmar.** RF-16, RF-17, RF-22, RF-23
   - Hecho cuando: `CargaServiceHojaYConfirmacionTest` pasa con: elegir hoja en `PendienteDeHoja` → `Valido` sin volver a subir; cambiar a otra hoja actualiza el resumen; hoja inexistente se ignora; confirmar con un lugar no válido no confirma; confirmar con ambos válidos → confirmada.
 
-[ ] **T16. `PantallaCargaDto` y `PantallaCargaMapper`.** RF-18, RF-20, RF-21, RF-22
-  - Hecho cuando: `PantallaCargaMapperTest` pasa con: Confirmar deshabilitado y texto de qué falta si un lugar no es válido; M7 cuando las huellas coinciden, aunque los nombres difieran; CSV + Excel ambos válidos → Confirmar habilitado; M8 solo si la carga está confirmada.
+[ ] **T16. `PantallaCargaDto` y `PantallaCargaMapper`.** RF-18, RF-20, RF-21, RF-22, RF-24
+  - Cambio por la spec 002: `PantallaCargaDto` suma `tituloTipo` (nombre del tipo activo).
+  - Hecho cuando: `PantallaCargaMapperTest` pasa con: Confirmar deshabilitado y texto de qué falta si un lugar no es válido; M7 cuando las huellas coinciden, aunque los nombres difieran; CSV + Excel ambos válidos → Confirmar habilitado; M8 solo si la carga está confirmada; `tituloTipo` es el nombre del tipo activo.
 
 [ ] **T17. Configuración de multipart.** RF-5, RNF-1
   - Hecho cuando: `ConfiguracionMultipartTest` (contexto de Spring) comprueba `max-file-size` = 30 MB y `file-size-threshold` mayor que `max-file-size`.
 
 [ ] **T18. `CargaController`: página y subida, con plantilla mínima.** RF-1, RF-4, RF-5, RF-13, RF-19, RNF-2, RNF-4
   - Plantilla funcional sin diseño, solo con estructura y textos.
-  - Hecho cuando: `CargaControllerSubidaTest` (MockMvc) pasa con: `GET /` muestra las tarjetas Propio y Contraparte; `POST /carga/PROPIO` redirige a `/`; `.ods` → M1 dentro de la tarjeta de Propio; archivo de 10.485.761 bytes → M2; después de subir, un `GET /` nuevo sigue mostrando el archivo.
+  - Cambio por la spec 002: la pantalla es `GET /carga` (ya no `GET /`) y la plantilla suma el título del tipo y el enlace "Volver al inicio" (`href="/"`).
+  - Hecho cuando: `CargaControllerSubidaTest` (MockMvc) pasa con: `GET /carga` (con tipo activo) muestra las tarjetas Propio y Contraparte, el nombre del tipo y el enlace `href="/"`; `GET /carga` sin tipo activo redirige a `/` sin mensaje; `POST /carga/PROPIO` redirige a `/carga`; `.ods` → M1 dentro de la tarjeta de Propio; archivo de 10.485.761 bytes → M2; después de subir, un `GET /carga` nuevo sigue mostrando el archivo.
 
 [ ] **T19. `CargaController`: hoja, confirmar y archivos muy grandes.** RF-5, RF-13, RF-15, RF-17, RF-22, RF-23
   - Crea `ManejadorGlobalExcepciones`.
-  - Hecho cuando: `CargaControllerHojaYConfirmacionTest` pasa con: Excel con varias hojas → se muestran las opciones sin preselección; `POST /carga/CONTRAPARTE/hoja` → resumen visible; botón Confirmar con `disabled` hasta tener dos válidos; tras confirmar aparece M8; un archivo de más de 30 MB → M2 en la tarjeta correcta.
+  - Cambio por la spec 002: los tests parten de `GET /carga` y todas las redirecciones van a `/carga`.
+  - Hecho cuando: `CargaControllerHojaYConfirmacionTest` pasa con: Excel con varias hojas → se muestran las opciones sin preselección; `POST /carga/CONTRAPARTE/hoja` → resumen visible; botón Confirmar con `disabled` hasta tener dos válidos; tras confirmar aparece M8 y la redirección va a `/carga`; un archivo de más de 30 MB → M2 en la tarjeta correcta.
 
 [ ] **T20. Nada sensible en los logs.** RNF-3
   - Hecho cuando: `LogsSinDatosTest` (con `OutputCaptureExtension`) sube un archivo con nombre y contenido marcados y comprueba que ninguno de los dos aparece en la salida, tanto en una subida válida como en una rechazada.
 
 [ ] **T21. Diseño visual con `/impeccable`.** RF-18 (presentación), RNF-5
   - Tarea visual: se verifica en el navegador, no con test (constitución, regla 4).
-  - Hecho cuando: en el navegador se ven las dos tarjetas, los 4 estados, la tabla de vista previa con recortes, M7 y M8; la página funciona con la red desactivada (sin CDN ni fuentes externas); los tests de T18–T19 siguen en verde.
+  - Cambio por la spec 002: conviene hacerla junto con las tareas visuales de la 002, con un solo `/impeccable init`, para que la carga y la página inicial no terminen con estilos distintos.
+  - Hecho cuando: en el navegador se ven el título del tipo y el enlace "Volver al inicio", las dos tarjetas, los 4 estados, la tabla de vista previa con recortes, M7 y M8; la página funciona con la red desactivada (sin CDN ni fuentes externas); los tests de T18–T19 siguen en verde.
 
 [ ] **T22. Cierre: README y verificación completa.**
   - Hecho cuando: la sección "Módulos" del `README.md` tiene una línea por clase creada; `./mvnw test` pasa completo; cada RF de la matriz del plan tiene su test o verificación marcada. Después de esto la spec pasa a validación (`/sdd-validate`).

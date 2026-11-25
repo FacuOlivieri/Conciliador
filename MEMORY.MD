@@ -4,7 +4,7 @@
 - Spec activa: `Coinciliador/specs/001-subida-archivos-csv/` (spec y plan aprobados).
 - Tareas: 12 de 22 hechas (T1–T12). Bloque B (lectura de archivos) completo; sigue el bloque C desde T13.
 - `./mvnw test` en verde (112 tests) al cerrar T12. T12 todavía sin commit.
-- Siguiente paso: commit de T12 y luego, antes de T13, aplicar con `/sdd-change` los 4 ajustes de la spec 002 (ver sección de pendientes de abajo). Después `/sdd-implement 001-subida-archivos-csv T13`.
+- Siguiente paso: cambio de la 002 APROBADO (2026-11-25) y aplicado a spec.md, plan.md y tasks.md de la 001 (RF-24, ruta `/carga`, `tipo` en `Carga`, `tituloTipo`). Falta: commitear esos 3 archivos y `/sdd-implement 001-subida-archivos-csv T13`. Antes de T13 tiene que estar `TipoConciliacion` en esta rama (hoy solo en el worktree del front; pedirle un commit solo con el enum).
 
 ## Decisiones
 - `LectorExcelService` arma el `Resumen` con `DataFormatter(es-AR)` (columnas alineadas desde A). De una fórmula se muestra el resultado guardado (`getCachedFormulaResultType`), porque `DataFormatter` sin evaluador devuelve el texto de la fórmula. Hoja de gráfico: queda afuera porque no tiene filas, pero no hay test (POI 5.5.1 no permite crear una).
