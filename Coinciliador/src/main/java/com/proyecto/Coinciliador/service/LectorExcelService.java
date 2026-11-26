@@ -4,6 +4,7 @@ import com.proyecto.Coinciliador.enums.MensajeCarga;
 import com.proyecto.Coinciliador.exception.ArchivoRechazadoException;
 import com.proyecto.Coinciliador.helper.AcumuladorFilas;
 import com.proyecto.Coinciliador.helper.ContenidoHelper;
+import com.proyecto.Coinciliador.helper.FechaExcelHelper;
 import com.proyecto.Coinciliador.helper.HuellaHelper;
 import com.proyecto.Coinciliador.helper.VistaPreviaHelper;
 import com.proyecto.Coinciliador.model.ArchivoCargado;
@@ -11,16 +12,18 @@ import com.proyecto.Coinciliador.model.EstadoLugar;
 import com.proyecto.Coinciliador.model.Resumen;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.FormulaError;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -41,7 +44,7 @@ public class LectorExcelService implements ILectorExcelService {
 
     @Override
     public EstadoLugar leer(String nombre, byte[] bytes) {
-        DataFormatter formato = nuevoFormato();
+        DataFormatter formato = new DataFormatter(ES_AR); // no es seguro entre hilos: uno por lectura
         return conLibro(bytes, libro -> estadoSegunHojas(libro, nombre, bytes, formato));
     }
 
@@ -94,18 +97,7 @@ public class LectorExcelService implements ILectorExcelService {
     @Override
     public Resumen resumirHoja(ArchivoCargado archivo, String hoja) {
         return conLibro(archivo.bytes(),
-                libro -> resumenDeHoja(archivo.nombre(), libro.getSheet(hoja), nuevoFormato()));
-    }
-
-    /**
-     * DataFormatter no es seguro entre hilos: uno por lectura. POI muestra los formatos de fecha predefinidos
-     * 14 y 22 con el mes primero, sea cual sea el locale, así que se reemplazan (RF-18).
-     */
-    private DataFormatter nuevoFormato() {
-        DataFormatter formato = new DataFormatter(ES_AR);
-        formato.addFormat("m/d/yy", new SimpleDateFormat("dd/MM/yy"));
-        formato.addFormat("m/d/yy h:mm", new SimpleDateFormat("dd/MM/yy HH:mm"));
-        return formato;
+                libro -> resumenDeHoja(archivo.nombre(), libro.getSheet(hoja), new DataFormatter(ES_AR)));
     }
 
     /** Hojas visibles con al menos una fila con datos. Una hoja de gráfico no tiene filas, así que queda afuera. */
@@ -148,7 +140,20 @@ public class LectorExcelService implements ILectorExcelService {
         if (celda == null) {
             return "";
         }
-        return celda.getCellType() == CellType.FORMULA ? resultadoGuardado(celda, formato) : formato.formatCellValue(celda);
+        return fecha(celda).orElseGet(() -> celda.getCellType() == CellType.FORMULA
+                ? resultadoGuardado(celda, formato)
+                : formato.formatCellValue(celda));
+    }
+
+    /** Toda celda con formato de fecha, sea un valor o el resultado de una fórmula, como dd/mm/aa (D10). */
+    private Optional<String> fecha(Cell celda) {
+        CellType tipo = celda.getCellType() == CellType.FORMULA ? celda.getCachedFormulaResultType() : celda.getCellType();
+        if (tipo != CellType.NUMERIC || !DateUtil.isValidExcelDate(celda.getNumericCellValue())) { // un negativo no es fecha
+            return Optional.empty();
+        }
+        // getLocalDateTimeCellValue respeta los libros con calendario 1904 (los de Mac).
+        return FechaExcelHelper.patron(celda.getCellStyle().getDataFormatString())
+                .map(patron -> celda.getLocalDateTimeCellValue().format(DateTimeFormatter.ofPattern(patron)));
     }
 
     /**

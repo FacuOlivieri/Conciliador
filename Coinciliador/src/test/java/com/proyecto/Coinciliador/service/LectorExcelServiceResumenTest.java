@@ -111,7 +111,7 @@ class LectorExcelServiceResumenTest {
 
     // 4 de marzo: día y mes distintos, para que un orden invertido no pase.
     @Test
-    void lasFechasCortasDeExcelSeMuestranConElDiaPrimeroEnXlsxYEnXls() {
+    void todasLasFechasSeMuestranComoDiaMesAnioEnXlsxYEnXls() {
         Consumer<Workbook> fechas = libro -> {
             Row fila = libro.createSheet("Datos").createRow(0);
             fila.createCell(0).setCellValue(LocalDateTime.of(2026, 3, 4, 15, 30));
@@ -122,13 +122,30 @@ class LectorExcelServiceResumenTest {
             fila.getCell(1).setCellStyle(conFormato(libro, "m/d/yy h:mm"));   // predefinido 22
             fila.getCell(2).setCellStyle(conFormato(libro, "m/d/yy"));
             fila.getCell(3).setCellStyle(conFormato(libro, "dd/mm/yyyy"));    // propio del archivo
+            fila.createCell(4).setCellValue(LocalDateTime.of(2026, 3, 4, 0, 0));
+            fila.getCell(4).setCellStyle(conFormato(libro, "d \"de\" mmmm \"de\" yyyy"));
+            fila.createCell(5).setCellValue(LocalDateTime.of(2026, 3, 4, 15, 30));
+            fila.getCell(5).setCellStyle(conFormato(libro, "h:mm"));           // hora sin fecha
             libro.getCreationHelper().createFormulaEvaluator().evaluateAll();
         };
-        List<String> esperado = List.of("04/03/26", "04/03/26 15:30", "04/03/26", "04/03/2026");
+        List<String> esperado = List.of("04/03/26", "04/03/26 15:30", "04/03/26", "04/03/26", "04/03/26", "15:30");
 
         assertThat(resumenDe(fechas).vistaPrevia()).containsExactly(esperado);
         EstadoLugar xls = lector.leer("libro.xls", FabricaArchivosPrueba.xls(fechas));
         assertThat(((EstadoLugar.Valido) xls).resumen().vistaPrevia()).containsExactly(esperado);
+    }
+
+    // Excel no tiene fechas negativas: un número así con formato de fecha se lee como número, sin romper la lectura.
+    @Test
+    void unNumeroNegativoConFormatoDeFechaNoRompeLaLectura() {
+        Resumen resumen = resumenDe(libro -> {
+            Row fila = libro.createSheet("Datos").createRow(0);
+            fila.createCell(0).setCellValue(-1);
+            fila.getCell(0).setCellStyle(conFormato(libro, "dd/mm/yyyy"));
+            fila.createCell(1).setCellValue("sigue");
+        });
+
+        assertThat(resumen.vistaPrevia().get(0).get(1)).isEqualTo("sigue");
     }
 
     @Test

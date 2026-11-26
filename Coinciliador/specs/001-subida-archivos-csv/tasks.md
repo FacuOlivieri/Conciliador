@@ -113,3 +113,7 @@ Si preferís partir la spec (por ejemplo, 001 CSV + interfaz y 002 Excel), se pu
 
 [x] **T23. Fechas de Excel en dd/mm/aa.** RF-18
   - Hecho cuando: `LectorExcelServiceResumenTest` pasa con una fecha en formato corto (predefinido 14) → `04/03/26`, con hora (22) → `04/03/26 15:30`, igual como resultado de una fórmula y en `.xls`; un formato propio del archivo (`dd/mm/yyyy`) se respeta.
+
+[x] **T24. Todas las fechas de Excel en dd/mm/aa.** RF-18
+  - Pedido del usuario: reemplaza el alcance de T23 (que solo cambiaba los formatos predefinidos).
+  - Hecho cuando: `FechaExcelHelperTest` distingue fecha, fecha con hora y hora sola; `LectorExcelServiceResumenTest` pasa con cualquier formato de fecha del archivo → `04/03/26` (con hora, `04/03/26 15:30`), y una hora sin fecha se muestra como en Excel.

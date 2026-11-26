@@ -24,7 +24,7 @@ Relación con la spec 002 (página inicial): la pantalla de carga deja de ser la
 - **Hoja listable:** hoja de un Excel que es visible, contiene celdas (no es una hoja de gráfico) y tiene al menos una fila con datos.
 - **Archivo vacío:** archivo de 0 bytes, CSV sin filas con datos o Excel sin ninguna hoja listable.
 - **Cantidad de filas:** cantidad de filas con datos del CSV o de la hoja usada.
-- **Vista previa:** las primeras 10 filas con datos. En un CSV se muestran separadas en columnas; en un Excel, con el valor que se ve en Excel (resultado de fórmulas, números y fechas con su formato). La fecha corta de Excel, cuyo orden depende de la configuración regional, se muestra siempre como dd/mm/aa (con hora, dd/mm/aa hh:mm). Se muestran hasta 20 columnas y cada celda hasta 50 caracteres.
+- **Vista previa:** las primeras 10 filas con datos. En un CSV se muestran separadas en columnas; en un Excel, con el valor que se ve en Excel (resultado de fórmulas y números con su formato). Las fechas se muestran siempre como dd/mm/aa (con hora, dd/mm/aa hh:mm), cualquiera sea el formato que tengan en el archivo; una hora sin fecha se muestra como en Excel. Se muestran hasta 20 columnas y cada celda hasta 50 caracteres.
 - **Archivo válido:** archivo que pasó todas las validaciones y, si es Excel, tiene una hoja determinada.
 - **10 MB:** 10.485.760 bytes.
 - **Mismo archivo:** dos archivos con contenido idéntico byte a byte, sin importar el nombre.

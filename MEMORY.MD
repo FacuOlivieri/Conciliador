@@ -4,7 +4,7 @@
 - Spec activa: `Coinciliador/specs/001-subida-archivos-csv/` (spec y plan aprobados).
 - Tareas: 22 de 22 hechas. El diseño (T21) lo hizo la sesión "Front Worktree" y está en main, junto con toda la spec 002 (be26808).
 - `./mvnw test` en verde (246 tests, specs 001 y 002) con T22 cerrada.
-- Validación del 2026-11-25: **spec NO cumplida**. RF-18 (fechas) corregido en T23. Quedan: RF-8 (un .csv binario sin bytes 0x00 se acepta) y RNF-4 (páginas de error Whitelabel en inglés). `./mvnw test` en verde (247 tests). Después repetir `/sdd-validate`. Para probar la app: `--server.address=127.0.0.1 --spring.docker.compose.enabled=false`.
+- Validación del 2026-11-25: **spec NO cumplida**. RF-18 (fechas) corregido: todas en dd/mm/aa (T24, `FechaExcelHelper`; las fechas de un CSV son texto y no se tocan). Quedan: RF-8 (un .csv binario sin bytes 0x00 se acepta) y RNF-4 (páginas de error Whitelabel en inglés). `./mvnw test` en verde (267 tests). Después repetir `/sdd-validate`. Para probar la app: `--server.address=127.0.0.1 --spring.docker.compose.enabled=false`.
 
 ## Decisiones
 - `CargaController` lee la carga con `ICargaService.cargaActual()` (no toca el repositorio) y la plantilla usa `fragmentos/tarjeta-lugar.html`. Sin Spring Security no hay protección CSRF.
