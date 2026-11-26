@@ -34,6 +34,8 @@
 
 ## Spec 002 (sesión "Front Worktree")
 - Mergeada en main. La rama temporal `tipo-conciliacion-para-001` se puede borrar. El texto del botón de archivo ("Choose File") es nativo del navegador y sigue su idioma.
+- 2026-11-26: validada; falló solo RF-11 y quedó arreglado (la sesión va solo en cookie), todavía en `worktree-front`. Falta cerrar T10. Sin decidir: `GET /conciliacion/{slug}` da 405 en inglés; subir sin tipo elegido pierde el archivo al elegirlo.
+- Error a evitar: MockMvc no reproduce la reescritura de URL (`;jsessionid`); las redirecciones con *flash* se prueban con servidor real (`TipoInexistenteSinCookieTest`).
 
 ## Pendientes a futuro (no implementar sin spec y aprobación)
 - **Spring Security** (pedido del usuario, pensando en escalar): hoy no hay protección CSRF ni login, y cualquiera que llegue al puerto ve la carga. Es una dependencia nueva: requiere aprobación (constitución, regla 1), spec propia y su tutorial en `docs/librerias/`. Mientras tanto la app escucha en todas las interfaces de red; fijar `server.address=127.0.0.1` la limitaría a la propia PC.

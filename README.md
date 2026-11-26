@@ -57,7 +57,7 @@ Paquete base `com.proyecto.Coinciliador`.
 - `EleccionTipoHelper`: decide al elegir un tipo: pide confirmación solo si hay carga en curso de otro tipo; si no, abre la carga.
 
 **`controller/` y recursos (spec 002, página inicial)**
-- `InicioController`: `GET /` (las tarjetas de los tipos y, si corresponde, el mensaje P1), `POST /conciliacion/{slug}` (elegir), `GET /conciliacion/{slug}/confirmar` (aviso D1) y `POST /conciliacion/{slug}/descartar`; un tipo inexistente vuelve a `/` con P1 sin tocar la carga.
+- `InicioController`: `GET /` (las tarjetas de los tipos y, si corresponde, el mensaje P1), `POST /conciliacion/{slug}` (elegir), `GET /conciliacion/{slug}/confirmar` (aviso D1) y `POST /conciliacion/{slug}/descartar`; un tipo inexistente vuelve a `/` con P1 sin tocar la carga. La sesión viaja solo en cookie (`application.properties`): con la sesión en la URL, esa redirección daba 404 en la primera visita.
 - `templates/inicio.html`: la página inicial; cada tipo es un formulario `POST` con un botón, sin JavaScript.
 - `templates/confirmar-cambio.html`: pide confirmar el cambio de tipo; "Cancelar" es un enlace a `/` y "Descartar y continuar" un botón aparte.
 - `static/css/base.css`: tokens de color (paleta monocromática lila), tipografía, botones, avisos y foco, comunes a todas las pantallas; sin CDN ni fuentes externas.
