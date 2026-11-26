@@ -15,14 +15,22 @@ public final class CodificacionHelper {
     private CodificacionHelper() {
     }
 
-    /** Falso si algún byte vale 0x00: un CSV de texto nunca lo contiene (RF-8). */
+    /**
+     * Falso si hay algún byte de control (incluido 0x00) que un CSV de texto no usa (RF-8, D6).
+     * shortcut: un binario sin ningún byte de control pasa como texto; es prácticamente imposible en un archivo real.
+     */
     public static boolean esTexto(byte[] bytes) {
         for (byte b : bytes) {
-            if (b == 0) {
+            if (b >= 0 && b < ' ' && !esControlDeTexto(b)) {
                 return false;
             }
         }
         return true;
+    }
+
+    // Tabulación, saltos de línea, avance de página y 0x1A, el fin de archivo que agregan sistemas viejos de DOS.
+    private static boolean esControlDeTexto(byte control) {
+        return control == '\t' || control == '\n' || control == '\r' || control == '\f' || control == 0x1A;
     }
 
     /** UTF-8 si los bytes lo decodifican en modo estricto; si no, Windows-1252 (D6). */

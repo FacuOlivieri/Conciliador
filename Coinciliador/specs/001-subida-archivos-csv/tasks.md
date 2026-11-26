@@ -117,3 +117,6 @@ Si preferís partir la spec (por ejemplo, 001 CSV + interfaz y 002 Excel), se pu
 [x] **T24. Todas las fechas de Excel en dd/mm/aa.** RF-18
   - Pedido del usuario: reemplaza el alcance de T23 (que solo cambiaba los formatos predefinidos).
   - Hecho cuando: `FechaExcelHelperTest` distingue fecha, fecha con hora y hora sola; `LectorExcelServiceResumenTest` pasa con cualquier formato de fecha del archivo → `04/03/26` (con hora, `04/03/26 15:30`), y una hora sin fecha se muestra como en Excel.
+
+[x] **T25. Rechazar un `.csv` binario aunque no tenga bytes cero.** RF-8
+  - Hecho cuando: `CodificacionHelperTest` considera binario cualquier byte de control salvo tabulación, salto de línea, retorno, avance de página y el fin de archivo de DOS (0x1A); `LectorCsvServiceTest` rechaza con M5 un binario sin ningún byte 0x00.

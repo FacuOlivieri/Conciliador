@@ -95,7 +95,7 @@ Paquete base `com.proyecto.Coinciliador`.
 - `AcumuladorFilas`: recibe las filas de a una; cuenta las que tienen datos, guarda las 10 primeras para la vista previa y rechaza con M4 al pasar las 100.000 filas.
 - `HuellaHelper`: calcula el SHA-256 de los bytes de un archivo en hexadecimal, para detectar que Propio y Contraparte son el mismo.
 - `FechaExcelHelper`: decide por el formato de Excel si una celda es una fecha y la muestra siempre en dd/mm/aa (con la hora si la tenía); una hora sola o un número quedan como en Excel.
-- `CodificacionHelper`: decide si unos bytes son texto (sin 0x00), detecta si el CSV está en UTF-8 o Windows-1252 y quita el BOM inicial.
+- `CodificacionHelper`: decide si unos bytes son texto (sin bytes de control, salvo tabulación, saltos de línea, avance de página y 0x1A), detecta si el CSV está en UTF-8 o Windows-1252 y quita el BOM inicial.
 - `SeparadorHelper`: detecta (desde una lista de líneas o desde el texto entero) si un CSV usa `;`, `,` o tabulación mirando las primeras 20 líneas con datos (ignora lo que está entre comillas; gana el separador con cuenta constante por línea y, en empate, `;`).
 
 **`repository/`**
