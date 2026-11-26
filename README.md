@@ -80,6 +80,7 @@ Paquete base `com.proyecto.Coinciliador`.
 - `CoinciliadorApplication`: punto de entrada; arranca la aplicación Spring Boot.
 
 **`model/`**
+- `TipoComprobante` (spec 003): un tipo de comprobante de ARCA con su código, su nombre oficial y sus abreviaturas (lista inmutable, puede estar vacía).
 - `Lugar`: los dos lugares de carga, Propio y Contraparte, con su etiqueta para la vista.
 - `FormatoArchivo`: formato real del archivo (CSV o EXCEL; `.xls` y `.xlsx` son ambos EXCEL).
 - `MensajeCarga`: catálogo de mensajes M1–M11 de la spec 001; única fuente de esos textos. M9–M11 son los fragmentos de "qué falta" para confirmar.
@@ -98,6 +99,7 @@ Paquete base `com.proyecto.Coinciliador`.
 - `CodificacionHelper`: decide si unos bytes son texto (sin bytes de control, salvo tabulación, saltos de línea, avance de página y 0x1A), detecta si el CSV está en UTF-8 o Windows-1252 y quita el BOM inicial.
 - `SeparadorHelper`: detecta (desde una lista de líneas o desde el texto entero) si un CSV usa `;`, `,` o tabulación mirando las primeras 20 líneas con datos (ignora lo que está entre comillas; gana el separador con cuenta constante por línea y, en empate, `;`).
 - `NormalizacionHelper` (spec 003): `normalizar` deja un texto en minúsculas, sin tildes ni diéresis (la ñ queda), con los signos como separadores y un solo espacio entre palabras; `recortar` quita los espacios de los extremos, incluido el espacio duro.
+- `CatalogoHelper` (spec 003): `deLinea` lee una línea del catálogo (`código⇥nombre⇥abreviaturas separadas por |`; si está mal armada lanza `IllegalArgumentException`) y `validar` devuelve los errores: código repetido, nombre o abreviatura sin letras, o abreviatura que también es de otro tipo. Los nombres oficiales sí pueden repetirse.
 
 **`repository/`**
 - `ICargaRepository` y `CargaEnMemoriaRepository`: guardan la carga en memoria, sin disco, compartida por todas las pestañas. Guardar un lugar no toca el otro y borra la confirmación; `reiniciar(tipo)` descarta todo y deja ambos lugares vacíos con ese tipo.

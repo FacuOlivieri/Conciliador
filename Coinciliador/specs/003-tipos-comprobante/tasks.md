@@ -22,7 +22,7 @@ El desglose dio **8 tareas**, dentro del máximo de 10, así que no hace falta d
     - `"FC E"` y `"FCE"` dan formas distintas.
     - `recortar` quita el espacio duro de los extremos y no toca los del medio.
 
-[ ] **T2. `TipoComprobante`, `CatalogoHelper.deLinea` y `CatalogoHelper.validar`.** RF-1, RF-2
+[x] **T2. `TipoComprobante`, `CatalogoHelper.deLinea` y `CatalogoHelper.validar`.** RF-1, RF-2
   - El record del modelo, la lectura de una línea y las reglas de RF-2. Todavía no se arman los índices.
   - Hecho cuando: `CatalogoHelperTest` pasa con estos casos:
     - `deLinea` convierte una línea con abreviaturas y otra sin ellas (lista vacía).

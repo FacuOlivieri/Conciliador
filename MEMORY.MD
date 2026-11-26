@@ -39,7 +39,8 @@
 - Error a evitar: MockMvc no reproduce la reescritura de URL (`;jsessionid`); las redirecciones con *flash* se prueban con servidor real (`TipoInexistenteSinCookieTest`).
 
 ## Spec 003 (tipos de comprobante)
-- 2026-11-26: **aprobada** (`Coinciliador/specs/003-tipos-comprobante/`). Catálogo interno de tipos de ARCA y reconocimiento de código o abreviatura. Anexo A aprobado: 121 tipos de la tabla del Libro IVA Digital (PDF "Tablas del SISTEMA" de arca.gob.ar) y 125 abreviaturas. Plan aprobado (catálogo en `resources/catalogo/tipos-comprobante.tsv`, validado al arrancar; un test lo compara con el anexo A del `spec.md`). `tasks.md`: **T1 hecha** (`NormalizacionHelper`, `./mvnw test` en verde, 297 tests); faltan T2–T8. Siguiente paso: aprobación del usuario y `/sdd-implement 003-tipos-comprobante T2`.
+- 2026-11-26: **aprobada** (`Coinciliador/specs/003-tipos-comprobante/`). Catálogo interno de tipos de ARCA y reconocimiento de código o abreviatura. Anexo A aprobado: 121 tipos de la tabla del Libro IVA Digital (PDF "Tablas del SISTEMA" de arca.gob.ar) y 125 abreviaturas. Plan aprobado (catálogo en `resources/catalogo/tipos-comprobante.tsv`, validado al arrancar; un test lo compara con el anexo A del `spec.md`). `tasks.md`: **T1 y T2 hechas** (T2: `TipoComprobante`, `CatalogoHelper.deLinea`/`validar`; `./mvnw test` en verde, 308 tests); faltan T3–T8. Siguiente paso: aprobación del usuario y `/sdd-implement 003-tipos-comprobante T3`.
+- Para T3: un mismo tipo puede repetir una forma (p. ej. "N/C A" y "N C A"); `armar` no debe cargarlo dos veces, o daría un falso RF-9.
 - `normalizar` deja solo a-z, ñ y 0-9 (plan §2): otras letras (ß, ø, º) separan palabras.
 - Decisiones: fuente = tabla del Libro IVA Digital; los signos separan palabras (así "FC E" ≠ "FCE"); en "1 - Factura A" código y texto deben ser del mismo tipo; sin límite de tiempo; valor de más de 100 caracteres = no reconocido.
 
