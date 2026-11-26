@@ -8,7 +8,7 @@ Aplicación para contadores que les ayuda a realizar conciliaciones de todo tipo
 
 ## Estado del proyecto
 
-Scaffold de Spring Initializr sin lógica propia: solo `CoinciliadorApplication` y su test `contextLoads`. `application.properties` define únicamente el nombre de la app y `compose.yaml` está vacío (`services: {}`). El proyecto Maven está en `Coinciliador/`.
+Scaffold de Spring Initializr sin lógica propia: solo `CoinciliadorApplication` y su test `contextLoads`. `application.properties` define únicamente el nombre de la app. Es una app local, sin base de datos. El proyecto Maven está en `Coinciliador/`.
 
 ## Comandos
 
@@ -28,7 +28,6 @@ No hay linter ni formateador configurados.
 
 - **Stack actual:** Spring Boot 4.2.0 con Spring MVC renderizado en servidor y Thymeleaf, Bean Validation, Actuator, Lombok y DevTools. No hay persistencia: la constitución exige aprobación explícita antes de agregar dependencias (por ejemplo JPA o un driver).
 - **Los starters de Spring Boot 4 son por funcionalidad:** el starter web es `spring-boot-starter-webmvc`, y cada starter tiene su equivalente de test (por ejemplo `spring-boot-starter-thymeleaf-test`). Agregar un starter de una funcionalidad normalmente implica agregar también su starter `-test`.
-- **Docker Compose:** `spring-boot-docker-compose` levanta los servicios de `compose.yaml` al ejecutar la aplicación. Hoy no hay ninguno.
 - **Lombok:** el procesador de anotaciones está declarado por separado en las ejecuciones `default-compile` y `default-testCompile` de `pom.xml`. Hay que mantener ambas al cambiar la configuración del compilador.
 - **Paquete base:** `com.proyecto.Coinciliador` (con mayúscula). Los componentes nuevos tienen que estar dentro de él para que los detecte el escaneo de componentes.
 - **Thymeleaf:** interfaces escritas en español. Usar la skill `/impeccable` para desarrollarlas.
@@ -61,7 +60,7 @@ No hay linter ni formateador configurados.
 - Cada dependencia nueva lleva un mini tutorial en `Coinciliador/docs/librerias/<libreria>.md` (qué es, para qué la usamos, versión, ejemplos de uso, errores comunes), verificado contra la documentación de la versión fijada
 - Leer `docs/constitution.md` y la spec activa (`specs/NNN-*/`) antes de tocar código.
 - Actualizar el `README` con los cambios generados, con una breve y concisa explicación de lo que hace cada clase y módulo creado
-- Una vez terminado la implementacion de la tarea de la specificacion, haz el commit. Formato: "feat: spec Sx-Tx, (nombre descriptivo para la spec)", este nombre descriptivo se refiere al problema que resuelve
+- Una vez terminado la implementacion de la tarea de la specificacion, sugeri un commit. Formato: "feat: spec Sx-Tx, (nombre descriptivo para la spec)", este nombre descriptivo se refiere al problema que resuelve
 
 ## Verificación
 

@@ -4,9 +4,10 @@
 - Spec activa: `Coinciliador/specs/001-subida-archivos-csv/` (spec y plan aprobados).
 - Tareas: 22 de 22 hechas. El diseño (T21) lo hizo la sesión "Front Worktree" y está en main, junto con toda la spec 002 (be26808).
 - `./mvnw test` en verde (246 tests, specs 001 y 002) con T22 cerrada.
-- Validación del 2026-11-25: **spec NO cumplida**. RF-18 (fechas) corregido: todas en dd/mm/aa (T24, `FechaExcelHelper`; las fechas de un CSV son texto y no se tocan). RF-8 corregido en T25 (se rechazan los bytes de control, no solo 0x00). Queda RNF-4 (páginas de error Whitelabel en inglés). `./mvnw test` en verde (276 tests). Después repetir `/sdd-validate`. Para probar la app: `--server.address=127.0.0.1 --spring.docker.compose.enabled=false`.
+- Validación del 2026-11-25: **spec NO cumplida**. RF-18 (fechas) corregido: todas en dd/mm/aa (T24, `FechaExcelHelper`; las fechas de un CSV son texto y no se tocan). RF-8 corregido en T25 (se rechazan los bytes de control, no solo 0x00). Queda RNF-4 (páginas de error Whitelabel en inglés). `./mvnw test` en verde (276 tests). Después repetir `/sdd-validate`. Para probar la app: `--server.address=127.0.0.1`.
 
 ## Decisiones
+- 2026-11-26: app local sin base de datos (decisión del usuario); se quitaron `spring-boot-docker-compose` y `compose.yaml`.
 - `CargaController` lee la carga con `ICargaService.cargaActual()` (no toca el repositorio) y la plantilla usa `fragmentos/tarjeta-lugar.html`. Sin Spring Security no hay protección CSRF.
 - Multipart: 30 MB por archivo y petición, umbral de disco 31 MB (D4). Además `server.tomcat.max-swallow-size=-1`: sin eso Tomcat corta la conexión con un archivo de más de 30 MB. `ArchivoMuyGrandeTest` lo prueba con un socket que envía todo antes de leer, como un navegador (el `HttpClient` de Java no detectaba el corte; MockMvc tampoco).
 - `PantallaCargaMapper` arma un `PantallaCargaDto` con dos `LugarVistaDto` (estado como enum `Estado`: VACIO, RECHAZADO, PENDIENTE_DE_HOJA, VALIDO). Todos los textos al usuario salen de `MensajeCarga`, incluidos los fragmentos de "qué falta" (M9–M11, en el catálogo de la spec): el mapper solo los completa, los une y pone la mayúscula (el usuario pidió tenerlos en un solo lugar). M7 usa la huella de cualquier lugar con archivo, incluso pendiente de hoja.
@@ -37,5 +38,11 @@
 - 2026-11-26: **cerrada (T10), estado "implementada"**; el cierre y el arreglo de RF-11 (sesión solo en cookie) están en `worktree-front`, falta llevarlos a main. Aceptado: páginas de error y selector de archivos en inglés. Sin decidir (requiere `/sdd-change`): `GET /conciliacion/{slug}` da 405; subir sin tipo elegido pierde el archivo al elegirlo.
 - Error a evitar: MockMvc no reproduce la reescritura de URL (`;jsessionid`); las redirecciones con *flash* se prueban con servidor real (`TipoInexistenteSinCookieTest`).
 
+## Spec 003 (tipos de comprobante)
+- 2026-11-26: **aprobada** (`Coinciliador/specs/003-tipos-comprobante/`). Catálogo interno de tipos de ARCA y reconocimiento de código o abreviatura. Anexo A aprobado: 121 tipos de la tabla del Libro IVA Digital (PDF "Tablas del SISTEMA" de arca.gob.ar) y 125 abreviaturas. Plan aprobado (catálogo en `resources/catalogo/tipos-comprobante.tsv`, validado al arrancar; un test lo compara con el anexo A del `spec.md`). `tasks.md`: **T1 hecha** (`NormalizacionHelper`, `./mvnw test` en verde, 297 tests); faltan T2–T8. Siguiente paso: aprobación del usuario y `/sdd-implement 003-tipos-comprobante T2`.
+- `normalizar` deja solo a-z, ñ y 0-9 (plan §2): otras letras (ß, ø, º) separan palabras.
+- Decisiones: fuente = tabla del Libro IVA Digital; los signos separan palabras (así "FC E" ≠ "FCE"); en "1 - Factura A" código y texto deben ser del mismo tipo; sin límite de tiempo; valor de más de 100 caracteres = no reconocido.
+
 ## Pendientes a futuro (no implementar sin spec y aprobación)
+- **Seguridad del catálogo `tipos-comprobante.tsv`** (pedido del usuario, 2026-11-26): protegerlo de ataques externos. Hoy no se publica por HTTP y solo se valida RF-2 al arrancar. Va junto con el pendiente de Spring Security. Detalle en el §9 del plan 003.
 - **Spring Security** (pedido del usuario, pensando en escalar): hoy no hay protección CSRF ni login, y cualquiera que llegue al puerto ve la carga. Es una dependencia nueva: requiere aprobación (constitución, regla 1), spec propia y su tutorial en `docs/librerias/`. Mientras tanto la app escucha en todas las interfaces de red; fijar `server.address=127.0.0.1` la limitaría a la propia PC.
