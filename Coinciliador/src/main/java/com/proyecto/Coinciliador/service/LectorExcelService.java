@@ -11,6 +11,7 @@ import com.proyecto.Coinciliador.model.EstadoLugar;
 import com.proyecto.Coinciliador.model.Resumen;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -40,7 +41,7 @@ public class LectorExcelService implements ILectorExcelService {
 
     @Override
     public EstadoLugar leer(String nombre, byte[] bytes) {
-        DataFormatter formato = new DataFormatter(ES_AR); // no es seguro entre hilos: uno por lectura
+        DataFormatter formato = nuevoFormato();
         return conLibro(bytes, libro -> estadoSegunHojas(libro, nombre, bytes, formato));
     }
 
@@ -93,7 +94,18 @@ public class LectorExcelService implements ILectorExcelService {
     @Override
     public Resumen resumirHoja(ArchivoCargado archivo, String hoja) {
         return conLibro(archivo.bytes(),
-                libro -> resumenDeHoja(archivo.nombre(), libro.getSheet(hoja), new DataFormatter(ES_AR)));
+                libro -> resumenDeHoja(archivo.nombre(), libro.getSheet(hoja), nuevoFormato()));
+    }
+
+    /**
+     * DataFormatter no es seguro entre hilos: uno por lectura. POI muestra los formatos de fecha predefinidos
+     * 14 y 22 con el mes primero, sea cual sea el locale, así que se reemplazan (RF-18).
+     */
+    private DataFormatter nuevoFormato() {
+        DataFormatter formato = new DataFormatter(ES_AR);
+        formato.addFormat("m/d/yy", new SimpleDateFormat("dd/MM/yy"));
+        formato.addFormat("m/d/yy h:mm", new SimpleDateFormat("dd/MM/yy HH:mm"));
+        return formato;
     }
 
     /** Hojas visibles con al menos una fila con datos. Una hoja de gráfico no tiene filas, así que queda afuera. */

@@ -106,3 +106,10 @@ Si preferís partir la spec (por ejemplo, 001 CSV + interfaz y 002 Excel), se pu
 
 [x] **T22. Cierre: README y verificación completa.**
   - Hecho cuando: la sección "Módulos" del `README.md` tiene una línea por clase creada; `./mvnw test` pasa completo; cada RF de la matriz del plan tiene su test o verificación marcada. Después de esto la spec pasa a validación (`/sdd-validate`).
+
+---
+
+## Correcciones de la validación
+
+[x] **T23. Fechas de Excel en dd/mm/aa.** RF-18
+  - Hecho cuando: `LectorExcelServiceResumenTest` pasa con una fecha en formato corto (predefinido 14) → `04/03/26`, con hora (22) → `04/03/26 15:30`, igual como resultado de una fórmula y en `.xls`; un formato propio del archivo (`dd/mm/yyyy`) se respeta.
