@@ -92,6 +92,7 @@ try (Workbook libro = new XSSFWorkbook();
 - **Fechas:** en Excel una fecha es un número con formato de fecha. Sin `DateUtil.isCellDateFormatted` se lee como `45291.0`.
 - **Fórmulas con `DataFormatter`:** `formatCellValue(celda)` sin `FormulaEvaluator` devuelve el **texto de la fórmula** (`A1+B1`), no su resultado. Para mostrar el resultado guardado en el archivo hay que leer `getCachedFormulaResultType()` y formatear ese valor (`formatRawCellContents` para números). Verificado en la tarea T11.
 - **Locale de los números:** `new DataFormatter()` usa el locale de la PC. Para que `1234.5` salga siempre `1234,5`, crear `new DataFormatter(Locale.forLanguageTag("es-AR"))`. `DataFormatter` no es seguro entre hilos: uno por lectura.
+- **Fechas:** aun con locale `es-AR`, `DataFormatter` muestra los formatos predefinidos 14 y 22 con el mes primero, y `DateUtil.isCellDateFormatted` no reconoce fechas con texto (`d "de" mmmm`). El proyecto decide con `FechaExcelHelper` sobre `getDataFormatString()` y formatea `getLocalDateTimeCellValue()` (respeta el calendario 1904). Un número negativo no es una fecha válida. Verificado en la tarea T24.
 - **Archivo con contraseña:** `WorkbookFactory.create` lanza `EncryptedDocumentException`.
 - **Archivo que no es Excel:** `WorkbookFactory.create` lanza `IOException` porque no reconoce el formato.
 - **Extensión cambiada:** un `.xlsx` renombrado a `.xls` igual se abre, porque `WorkbookFactory` detecta por contenido. Relevante para una de las dudas abiertas de la spec 001.

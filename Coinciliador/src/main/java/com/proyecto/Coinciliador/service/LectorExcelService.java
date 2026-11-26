@@ -4,6 +4,7 @@ import com.proyecto.Coinciliador.enums.MensajeCarga;
 import com.proyecto.Coinciliador.exception.ArchivoRechazadoException;
 import com.proyecto.Coinciliador.helper.AcumuladorFilas;
 import com.proyecto.Coinciliador.helper.ContenidoHelper;
+import com.proyecto.Coinciliador.helper.FechaExcelHelper;
 import com.proyecto.Coinciliador.helper.HuellaHelper;
 import com.proyecto.Coinciliador.helper.VistaPreviaHelper;
 import com.proyecto.Coinciliador.model.ArchivoCargado;
@@ -11,15 +12,18 @@ import com.proyecto.Coinciliador.model.EstadoLugar;
 import com.proyecto.Coinciliador.model.Resumen;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.FormulaError;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -136,7 +140,20 @@ public class LectorExcelService implements ILectorExcelService {
         if (celda == null) {
             return "";
         }
-        return celda.getCellType() == CellType.FORMULA ? resultadoGuardado(celda, formato) : formato.formatCellValue(celda);
+        return fecha(celda).orElseGet(() -> celda.getCellType() == CellType.FORMULA
+                ? resultadoGuardado(celda, formato)
+                : formato.formatCellValue(celda));
+    }
+
+    /** Toda celda con formato de fecha, sea un valor o el resultado de una fórmula, como dd/mm/aa (D10). */
+    private Optional<String> fecha(Cell celda) {
+        CellType tipo = celda.getCellType() == CellType.FORMULA ? celda.getCachedFormulaResultType() : celda.getCellType();
+        if (tipo != CellType.NUMERIC || !DateUtil.isValidExcelDate(celda.getNumericCellValue())) { // un negativo no es fecha
+            return Optional.empty();
+        }
+        // getLocalDateTimeCellValue respeta los libros con calendario 1904 (los de Mac).
+        return FechaExcelHelper.patron(celda.getCellStyle().getDataFormatString())
+                .map(patron -> celda.getLocalDateTimeCellValue().format(DateTimeFormatter.ofPattern(patron)));
     }
 
     /**

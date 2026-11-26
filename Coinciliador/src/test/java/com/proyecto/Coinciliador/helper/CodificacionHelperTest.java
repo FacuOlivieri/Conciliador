@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 // Cubre RF-8 (texto o binario) y RF-12 (codificación y BOM del CSV).
 class CodificacionHelperTest {
@@ -47,6 +49,17 @@ class CodificacionHelperTest {
     @Test
     void losBytesSinCeroSonTexto() {
         assertThat(CodificacionHelper.esTexto(TEXTO.getBytes(WINDOWS_1252))).isTrue();
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0x01, 0x07, 0x08, 0x0B, 0x0E, 0x1B, 0x1F})
+    void unByteDeControlNoEsTextoAunqueNoHayaCeros(int control) {
+        assertThat(CodificacionHelper.esTexto(new byte[] {'a', (byte) control, 'b'})).isFalse();
+    }
+
+    @Test
+    void tabulacionSaltosDeLineaAvanceDePaginaYElFinDeArchivoDeDosSonTexto() {
+        assertThat(CodificacionHelper.esTexto(new byte[] {'a', '\t', 'b', '\r', '\n', '\f', 0x1A})).isTrue();
     }
 
     @Test

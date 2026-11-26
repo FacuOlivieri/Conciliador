@@ -91,7 +91,7 @@ Ninguna recibe "hoy" (ver §0). Todas son deterministas y sin efectos secundario
 |---|---|---|
 | `ExtensionHelper.extension` | nombre → extensión en minúsculas, o vacío si no hay punto o termina en punto | RF-3 |
 | `ExtensionHelper.esPermitida` | nombre → verdadero si la extensión es `csv`, `xlsx` o `xls` | RF-3, RF-4 |
-| `CodificacionHelper.esTexto` | bytes → falso si contiene algún byte 0x00 | RF-8 |
+| `CodificacionHelper.esTexto` | bytes → falso si contiene algún byte de control que no sea tabulación, salto de línea, retorno, avance de página o 0x1A | RF-8 |
 | `CodificacionHelper.detectar` | bytes → UTF-8 si decodifica sin errores en modo estricto; si no, Windows-1252 | RF-12 |
 | `CodificacionHelper.quitarBom` | texto → texto sin `﻿` inicial | Def. celda con datos |
 | `SeparadorHelper.detectar` | primeras líneas → `;`, `,` o tab | RF-12 |
@@ -129,7 +129,7 @@ analizador.analizar(nombre, bytes):
 ```
 lectorCsv.leer(nombre, bytes):
     si bytes vacío: rechazar M3
-    si no esTexto(bytes): rechazar M5          # también cubre un Excel renombrado a .csv
+    si no esTexto(bytes): rechazar M5          # bytes de control; también cubre un Excel renombrado a .csv
     codificacion = detectar(bytes)
     texto = quitarBom(decodificar(bytes, codificacion))
     separador = SeparadorHelper.detectar(primeras 20 líneas con datos de texto)
@@ -247,11 +247,11 @@ Estados de cada tarjeta:
 | D3 | Extensión y tamaño con Bean Validation (restricciones propias); vacío, legibilidad, cifrado y filas en los lectores con `ArchivoRechazadoException`. | Todo en el service: incumple la regla 5. Todo en restricciones: una restricción que abre el Excel duplicaría el parseo y metería lógica pesada en la validación. |
 | D4 | Multipart a 30 MB, umbral de disco a 31 MB y límite de negocio en `@TamanoMaximo`. | `max-file-size=10MB`: Spring corta antes del controlador con un error genérico y es más difícil indicar el lugar y testear el byte exacto. |
 | D5 | `WorkbookFactory` detecta `.xls`/`.xlsx` por contenido. | Elegir `HSSFWorkbook`/`XSSFWorkbook` por extensión: rechazaría los archivos renombrados (RF-11). |
-| D6 | Codificación: UTF-8 estricto y, si falla, Windows-1252. Texto = sin bytes 0x00. | Librería de detección (por ejemplo juniversalchardet): dependencia nueva (regla 1) para solo dos codificaciones. |
+| D6 | Codificación: UTF-8 estricto y, si falla, Windows-1252. Texto = sin bytes de control, salvo tabulación, saltos de línea, avance de página y 0x1A (T25; antes solo se rechazaba 0x00 y un binario sin ceros pasaba como válido). | Librería de detección (por ejemplo juniversalchardet): dependencia nueva (regla 1) para solo dos codificaciones. |
 | D7 | Separador: contar `;`, `,` y tab fuera de comillas en las primeras 20 líneas con datos; gana el que aparece en la mayor cantidad de líneas con la misma cuenta; empate → `;` (lo usual en Argentina). | Preguntar al usuario: la spec pide detectar. |
 | D8 | API normal de POI (carga la hoja en memoria). | API de streaming (SAX/eventos): mucho más código. Con 10 MB, máximo 100.000 filas y la protección anti zip bomb de POI (ratio mínimo 1 % por defecto) alcanza. Se revisa si un test con 100.000 filas supera tiempos razonables. **Revisado en T12 (2026-11-25):** 100.000 filas x 3 columnas tardaron de 6 a más de 10 s; se decidió mantener la API normal y subir el límite del test a 30 s. Un xlsx de 10 MB puede tardar bastante más: si molesta en el uso real, pasar a lectura en streaming. |
 | D9 | Fórmulas: se muestra el resultado guardado en el archivo (lo que se vio en Excel al guardarlo). | Evaluar con `FormulaEvaluator`: más lento y falla con referencias a otros libros. |
-| D10 | Formato de celdas con `DataFormatter` en locale `es-AR`. | Locale por defecto de la JVM: el resultado cambiaría según la PC. |
+| D10 | Formato de celdas con `DataFormatter` en locale `es-AR`. (T24) Toda celda con formato de fecha se muestra `dd/MM/yy` (con hora, `dd/MM/yy HH:mm`), sin usar el formato del archivo (`FechaExcelHelper`). | Locale por defecto de la JVM: el resultado cambiaría según la PC. |
 | D11 | Página única con PRG, sin JavaScript de lógica. | Interfaz con `fetch`/JS: más piezas y la lógica se iría a la vista (regla 3). |
 | D12 | Archivos de prueba generados por código en los tests. | Binarios en `src/test/resources`: riesgo de colar datos reales (regla 5, RNF-6) y difíciles de revisar. |
 | D13 | (002) La pantalla de carga vive en `/carga` y el tipo activo dentro de `Carga` (mismo repositorio). | Dejar la carga en `/`: contradice que la página inicial sea la primera pantalla. Un repositorio aparte para el tipo: dos fuentes de verdad (decisiones D1 y D7 de la spec 002). |

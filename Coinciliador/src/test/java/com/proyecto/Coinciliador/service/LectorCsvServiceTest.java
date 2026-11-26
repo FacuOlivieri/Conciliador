@@ -45,6 +45,12 @@ class LectorCsvServiceTest {
     }
 
     @Test
+    void rechazaConM5UnArchivoBinarioSinNingunByteCero() {
+        assertRechazaCon(new byte[] {1, 2, 3, 8, 14, (byte) 0x80, (byte) 0xFF, '\n', 27, 31, (byte) 0xFE},
+                MensajeCarga.M5);
+    }
+
+    @Test
     void rechazaConM5UnXlsxRenombradoACsv() {
         assertRechazaCon(FabricaArchivosPrueba.xlsxMinimo(), MensajeCarga.M5);
     }

@@ -106,3 +106,17 @@ Si preferís partir la spec (por ejemplo, 001 CSV + interfaz y 002 Excel), se pu
 
 [x] **T22. Cierre: README y verificación completa.**
   - Hecho cuando: la sección "Módulos" del `README.md` tiene una línea por clase creada; `./mvnw test` pasa completo; cada RF de la matriz del plan tiene su test o verificación marcada. Después de esto la spec pasa a validación (`/sdd-validate`).
+
+---
+
+## Correcciones de la validación
+
+[x] **T23. Fechas de Excel en dd/mm/aa.** RF-18
+  - Hecho cuando: `LectorExcelServiceResumenTest` pasa con una fecha en formato corto (predefinido 14) → `04/03/26`, con hora (22) → `04/03/26 15:30`, igual como resultado de una fórmula y en `.xls`; un formato propio del archivo (`dd/mm/yyyy`) se respeta.
+
+[x] **T24. Todas las fechas de Excel en dd/mm/aa.** RF-18
+  - Pedido del usuario: reemplaza el alcance de T23 (que solo cambiaba los formatos predefinidos).
+  - Hecho cuando: `FechaExcelHelperTest` distingue fecha, fecha con hora y hora sola; `LectorExcelServiceResumenTest` pasa con cualquier formato de fecha del archivo → `04/03/26` (con hora, `04/03/26 15:30`), y una hora sin fecha se muestra como en Excel.
+
+[x] **T25. Rechazar un `.csv` binario aunque no tenga bytes cero.** RF-8
+  - Hecho cuando: `CodificacionHelperTest` considera binario cualquier byte de control salvo tabulación, salto de línea, retorno, avance de página y el fin de archivo de DOS (0x1A); `LectorCsvServiceTest` rechaza con M5 un binario sin ningún byte 0x00.
