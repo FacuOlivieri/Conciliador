@@ -62,7 +62,8 @@ Dependencias: T13 (`Carga` con `tipo` y `reiniciar`), T14 y T18 (`CargaControlle
   - Tarea visual: se verifica en el navegador, no con test (constitución, regla 4). Empieza con `/impeccable init`; conviene coordinarlo con la sesión de la 001 para que su T21 use el mismo contexto de diseño.
   - Hecho cuando: en el navegador se ven las cuatro tarjetas y la pantalla de confirmación con el aviso D1, el mensaje P1 y el título del tipo en la carga; se recorre todo el flujo con Tab y Enter sin usar el ratón; la página funciona con la red desactivada, sin CDN ni fuentes externas; los tests de T5, T7 y T8 siguen en verde.
 
-[ ] **T10. Cierre: README y verificación completa.**
+[x] **T10. Cierre: README y verificación completa.**
+  - Verificado el 2026-11-26: 277 tests en verde; RF-1 a RF-11 cumplidos (RF-11 se corrigió en `3b8116d`). RNF-3 con dos excepciones aceptadas al cerrar: las páginas de error del servidor y el texto nativo del selector de archivos salen en inglés. RNF-1 comprobado por ausencia de recursos externos, no con la red desactivada.
   - Hecho cuando: la sección "Módulos" del `README.md` tiene una línea por clase creada; `./mvnw test` pasa completo; cada RF y RNF de la matriz del plan tiene su test o su verificación marcada. Después de esto la spec pasa a validación (`/sdd-validate`) y se hace el commit.
 
 ## Cobertura de RF y RNF

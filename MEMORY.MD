@@ -34,7 +34,7 @@
 
 ## Spec 002 (sesión "Front Worktree")
 - Mergeada en main. La rama temporal `tipo-conciliacion-para-001` se puede borrar. El texto del botón de archivo ("Choose File") es nativo del navegador y sigue su idioma.
-- 2026-11-26: validada; falló solo RF-11 y quedó arreglado (la sesión va solo en cookie), todavía en `worktree-front`. Falta cerrar T10. Sin decidir: `GET /conciliacion/{slug}` da 405 en inglés; subir sin tipo elegido pierde el archivo al elegirlo.
+- 2026-11-26: **cerrada (T10), estado "implementada"**; el cierre y el arreglo de RF-11 (sesión solo en cookie) están en `worktree-front`, falta llevarlos a main. Aceptado: páginas de error y selector de archivos en inglés. Sin decidir (requiere `/sdd-change`): `GET /conciliacion/{slug}` da 405; subir sin tipo elegido pierde el archivo al elegirlo.
 - Error a evitar: MockMvc no reproduce la reescritura de URL (`;jsessionid`); las redirecciones con *flash* se prueban con servidor real (`TipoInexistenteSinCookieTest`).
 
 ## Pendientes a futuro (no implementar sin spec y aprobación)

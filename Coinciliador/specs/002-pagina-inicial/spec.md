@@ -1,5 +1,5 @@
 # Spec 002 — Página inicial
-Estado: aprobada
+Estado: implementada
 
 ## Contexto y objetivo
 El contador hace distintas conciliaciones (IVA, Ventas, Compras, Ingresos Brutos) y hoy la aplicación no le permite decir cuál quiere hacer. Esta spec cubre solo la página inicial: mostrar los tipos de conciliación disponibles, dejar elegir uno y llevar a la carga de archivos de la spec 001 con ese tipo a la vista. Las reglas propias de cada tipo se definen en specs posteriores.
