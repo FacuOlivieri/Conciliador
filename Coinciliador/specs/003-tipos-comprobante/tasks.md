@@ -29,7 +29,7 @@ El desglose dio **8 tareas**, dentro del máximo de 10, así que no hace falta d
     - `validar` encuentra, cada uno por separado: código repetido, nombre sin letras, abreviatura sin letras, abreviatura repetida en otro tipo, y abreviatura igual al nombre oficial de otro tipo.
     - `validar` no da errores con un catálogo válido que tiene dos nombres oficiales repetidos.
 
-[ ] **T3. `CatalogoTiposComprobante` y `CatalogoHelper.armar`.** RF-2, RF-5, RF-9
+[x] **T3. `CatalogoTiposComprobante` y `CatalogoHelper.armar`.** RF-2, RF-5, RF-9
   - Arma los dos índices: por código sin ceros y por forma normalizada.
   - Hecho cuando: `CatalogoHelperTest` suma estos casos:
     - `armar` lanza `IllegalArgumentException` con un catálogo inválido.

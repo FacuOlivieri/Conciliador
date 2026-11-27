@@ -1,18 +1,22 @@
 package com.proyecto.Coinciliador.helper;
 
+import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
+import com.proyecto.Coinciliador.model.CatalogoTiposComprobante;
 import com.proyecto.Coinciliador.model.TipoComprobante;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-/** Funciones puras que leen y validan el catálogo de tipos de comprobante (RF-1, RF-2). */
+/** Funciones puras que leen, validan y arman el catálogo de tipos de comprobante (RF-1, RF-2, RF-5, RF-9). */
 public final class CatalogoHelper {
 
     private CatalogoHelper() {
@@ -34,6 +38,35 @@ public final class CatalogoHelper {
         errores.addAll(textosSinLetras(tipos));
         errores.addAll(abreviaturasAmbiguas(tipos));
         return errores;
+    }
+
+    /** Valida (RF-2) y arma los índices; con errores lanza {@code IllegalArgumentException} con la lista. */
+    public static CatalogoTiposComprobante armar(List<TipoComprobante> tipos) {
+        List<String> errores = validar(tipos);
+        if (!errores.isEmpty()) {
+            throw new IllegalArgumentException("Catálogo inválido: " + errores);
+        }
+        return new CatalogoTiposComprobante(porCodigo(tipos), porForma(tipos));
+    }
+
+    /** La clave es el código como texto, sin ceros adelante (RF-3). */
+    private static Map<String, TipoComprobante> porCodigo(List<TipoComprobante> tipos) {
+        return tipos.stream().collect(toMap(tipo -> String.valueOf(tipo.codigo()), identity()));
+    }
+
+    /** Cada tipo entra una sola vez por forma: repetido parecería ambiguo (RF-9). */
+    private static Map<String, List<TipoComprobante>> porForma(List<TipoComprobante> tipos) {
+        Map<String, List<TipoComprobante>> indice = new HashMap<>();
+        for (TipoComprobante tipo : tipos) {
+            for (String texto : textos(tipo).toList()) {
+                String forma = NormalizacionHelper.normalizar(texto);
+                List<TipoComprobante> lista = indice.computeIfAbsent(forma, clave -> new ArrayList<>());
+                if (!lista.contains(tipo)) {
+                    lista.add(tipo);
+                }
+            }
+        }
+        return indice;
     }
 
     private static List<String> codigosRepetidos(List<TipoComprobante> tipos) {
